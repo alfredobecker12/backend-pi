@@ -1,6 +1,7 @@
 import prismaClient from "../../prisma";
 import { hash } from "bcryptjs";
 import { StatusUser } from "@prisma/client";
+import { CatCliente } from "@prisma/client";
 
 interface UserRequest {
   categoria: string;
@@ -8,10 +9,17 @@ interface UserRequest {
   cnpj: string;
   email: string;
   password: string;
+  receita_bruta: number;
 }
 
 class CreateUserService {
-  async execute({ categoria, razao_social, cnpj, email, password }: UserRequest) {
+  private clientSize: CatCliente; // Declaração da variável clientSize
+  
+  constructor() {
+    this.clientSize = CatCliente.P; // Inicialização da variável clientSize
+  }
+
+  async execute({ categoria, razao_social, cnpj, email, password, receita_bruta }: UserRequest) {
     // Verifica se ele enviou um email
     if (!email) {
       throw new Error("Email incorrect");
@@ -37,6 +45,18 @@ class CreateUserService {
       if (cnpjAlreadyExists) {
         throw new Error("Este CNPJ já está cadastrado");
       }
+
+      if (receita_bruta < 0) {        
+        throw new Error("Valor da receita bruta não pode ser inferior a 0.");      
+      } else {        
+        if (receita_bruta < 10000) {
+          this.clientSize = CatCliente.P; 
+        } else if (receita_bruta >= 10000 && receita_bruta < 50000) {
+          this.clientSize = CatCliente.M; 
+        } else if (receita_bruta >= 50000) {
+          this.clientSize = CatCliente.G;  
+        }      
+      }
   
       // Cria a senha
       const passwordHash = await hash(password, 8);
@@ -58,6 +78,8 @@ class CreateUserService {
           razao_social: razao_social,
           status: StatusUser.ATIVO,
           email: email,
+          receita_bruta: receita_bruta,
+          categoria_cliente: this.clientSize, // Utilizando o valor de clientSize
           id_log: userPassword.id,
         },
         select: {
@@ -100,7 +122,7 @@ class CreateUserService {
           razao_social: razao_social,
           status: StatusUser.ATIVO,
           email: email,
-          id_log: userPassword.id
+          id_log: userPassword.id,
         },
         select: {
           cnpj: true,

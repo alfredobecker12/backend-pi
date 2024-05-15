@@ -1,0 +1,17 @@
+{
+    "categoria": "R",
+    "razao_social": "Pablo",
+    "cnpj": "12345",
+    "email": "123#hotmail.com",
+    "password": "12345"
+}
+
+{
+    "categoria": "C",
+    "razao_social": "Mauricio",
+    "cnpj": "12875",
+    "email": "123#hotmail.com",
+    "password": "365214",
+    "receita_bruta": 12000
+}
+

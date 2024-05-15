@@ -15,22 +15,25 @@ datasource db {
 
 // criar uma migration: yarn prisma migrate dev
 model Representante {
-  cnpj          String        @id
-  razao_social  String
-  status        StatusUser
-  email         String
-  data_cadastro DateTime   @default(now())
-  id_log        Int
-  pedido        Pedido[]
-  login         Login      @relation(fields: [id_log], references: [id])
+  cnpj               String               @id
+  razao_social       String
+  status             StatusUser
+  email              String
+  data_cadastro      DateTime             @default(now())
+  id_log             Int
+  pedido             Pedido[]
+  login              Login                @relation(fields: [id_log], references: [id])
+  RepresentanteMarca RepresentanteMarca[]
 }
 
 model Cliente {
-  cnpj          String        @id
+  cnpj          String     @id
   razao_social  String
   status        StatusUser
   email         String
   data_cadastro DateTime   @default(now())
+  receita_bruta Float
+  categoria_cliente  CatCliente
   id_log        Int
   login         Login      @relation(fields: [id_log], references: [id])
   pedido        Pedido[]
@@ -44,9 +47,20 @@ model Login {
 }
 
 model Marca {
-  id           Int       @id @default(autoincrement())
-  razao_social String
-  produto      Produto[]
+  cnpj               String                  @id
+  razao_social       String
+  produto            Produto[]
+  RepresentanteMarca RepresentanteMarca[]
+}
+
+model RepresentanteMarca {
+  id                Int                @id @default(autoincrement())
+  cnpjRepresentante String
+  cnpjMarca         String
+  categoria_representante CatCliente
+  data_cadastro     DateTime           @default(now())
+  representante     Representante      @relation(fields: [cnpjRepresentante], references: [cnpj])
+  marca             Marca              @relation(fields: [cnpjMarca], references: [cnpj])
 }
 
 model CategoriaProduto {
@@ -62,10 +76,10 @@ model Produto {
   peso             Int
   preco            Float
   id_cat           Int
-  id_marca         Int
+  cnpj_marca       String
   pedidoProduto    PedidoProduto[]
   categoriaProduto CategoriaProduto @relation(fields: [id_cat], references: [id])
-  marca            Marca            @relation(fields: [id_marca], references: [id])
+  marca            Marca            @relation(fields: [cnpj_marca], references: [cnpj])
 }
 
 model Pedido {
@@ -83,6 +97,7 @@ model Pedido {
 model PedidoProduto {
   id_prod Int
   id_ped  Int
+  quantidade Int
   pedido  Pedido  @relation(fields: [id_ped], references: [id])
   produto Produto @relation(fields: [id_prod], references: [id])
 
@@ -98,4 +113,10 @@ enum StatusPedido {
   PENDENTE
   CANCELADO
   FINALIZADO
+}
+
+enum CatCliente {
+  P
+  M
+  G
 }

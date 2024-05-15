@@ -10,7 +10,7 @@ interface UserRequest { //Cria a interface de como deve ser a estrutura dos dado
 }
 
 class CreateProductService {
-    async execute({descricao, validade, peso, preco, categoria, marca}: UserRequest){ 
+    async execute({descricao, validade, peso, preco, categoria, marca}: UserRequest) { 
         
         const categoriaVerify = await prismaClient.categoriaProduto.findFirst({
             where: {
@@ -18,12 +18,8 @@ class CreateProductService {
             }
         });
 
-        if (!categoriaVerify) {
-            await prismaClient.categoriaProduto.create({
-                data: {
-                    descricao: categoria
-                }
-            });
+        if (!categoriaVerify) { 
+            throw new Error("Campo categoria não pode ser nulo");
         }
         
         const marcaVerify = await prismaClient.marca.findFirst({
@@ -33,11 +29,7 @@ class CreateProductService {
         });
 
         if (!marcaVerify) {
-            await prismaClient.marca.create({
-                data: {
-                    razao_social: marca
-                }
-            });
+            throw new Error("Campo marca não pode ser nulo.");
         }
 
         const productAlreadyExists = await prismaClient.produto.findFirst({
@@ -47,7 +39,7 @@ class CreateProductService {
                 peso: peso,
                 preco: preco,
                 id_cat: categoriaVerify.id,
-                id_marca: marcaVerify.id,
+                cnpj_marca: marcaVerify.cnpj,
             }
         });
     
@@ -62,7 +54,7 @@ class CreateProductService {
                 peso: peso,
                 preco: preco,
                 id_cat: categoriaVerify.id,
-                id_marca: marcaVerify.id,
+                cnpj_marca: marcaVerify.cnpj,
             }
         });
         
