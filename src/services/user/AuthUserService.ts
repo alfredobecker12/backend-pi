@@ -32,7 +32,7 @@ class AuthUserService {
       const passwordMatch = await compare(password, passwordCliente.password);
 
       if (!passwordMatch) {
-        throw new Error("Usuário ou senha incorreto");
+        throw {statusCode: 401, message: "Usuário ou senha incorreto"};
       }
 
       // Se passou das validações gera o token pro usuario
@@ -62,18 +62,16 @@ class AuthUserService {
           cnpj: cnpj,
         },
       });
-      console.log("to aqui")
       const passwordRepresentante = await prismaClient.login.findFirst({
           where: {
             id: infoRepresentante.id_log,
           }
         });
-      console.log("To ali")
       // Verifica se a senha que ele mandou está correta.
       const passwordMatch = await compare(password, passwordRepresentante.password);
 
       if (!passwordMatch) {
-        throw new Error("Usuário ou senha incorreto");
+        throw {statusCode: 200, message: "Usuário ou senha incorreto"};
       }
 
       // Se passou das validações gera o token pro usuario

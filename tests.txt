@@ -1,3 +1,4 @@
+//representante
 {
     "categoria": "R",
     "razao_social": "Pablo",
@@ -6,6 +7,7 @@
     "password": "12345"
 }
 
+//cliente
 {
     "categoria": "C",
     "razao_social": "Mauricio",
@@ -15,3 +17,60 @@
     "receita_bruta": 12000
 }
 
+//categoria
+{
+   "descricao": "Construção"
+}
+
+//marca
+{
+   "cnpj_rep": "12345",
+   "cnpj_marca": "12363",
+   "tijolosLTDA"
+}
+
+//produto
+{
+    "descricao": "Produto A",
+    "validade": "2024-12-31",
+    "peso": 1.5,
+    "preco": 6.99,
+    "categoria": "Construção",
+    "marca": "tijolosLTDA"
+}
+
+//produto
+{
+    "descricao": "Produto A",
+    "validade": "2024-12-31",
+    "peso": 1.5,
+    "preco": 25.99,
+    "categoria": "Construção",
+    "marca": "tijolosLTDA"
+}
+
+//pedido
+{
+    "cnpj_cli": "12345",
+    "cnpj_rep": "12875",
+    "itens": [
+        {
+            "id_prod": 1,
+            "quantidade": 2
+        },
+        {
+            "id_prod": 2,
+            "quantidade": 4
+        }
+    ]
+}
+
+//lista pedidos
+{
+    "cnpj": "12345"
+}
+
+//lista pedidos
+{
+    "cnpj": "12875"
+}

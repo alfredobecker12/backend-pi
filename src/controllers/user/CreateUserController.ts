@@ -16,7 +16,7 @@ class CreateUserController {
       receita_bruta,
     });
 
-    return res.json(user);
+    return res.status(201);
   }
 }
 

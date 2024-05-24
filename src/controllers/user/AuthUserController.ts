@@ -11,7 +11,7 @@ class AuthUserController {
       cnpj,
       password,
     });
-
+    console.log(auth)
     return res.json(auth);
   }
 }
