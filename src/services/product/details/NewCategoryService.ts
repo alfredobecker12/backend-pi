@@ -1,3 +1,4 @@
+import { AppError } from "../../../Errors/appError";
 import prismaClient from "../../../prisma";
 
 interface UserRequest {
@@ -7,7 +8,7 @@ interface UserRequest {
 class NewCategoryService {
     async execute({descricao}: UserRequest) {
         if (!descricao) {
-            throw new Error("Informe a descrição da categoria.");
+            throw new AppError("Informe a descrição da categoria.", 400);
         }
         
         const newProductCategory = await prismaClient.categoriaProduto.create({

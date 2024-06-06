@@ -1,3 +1,4 @@
+import { AppError } from "../../Errors/appError";
 import prismaClient from "../../prisma";
 import { hash } from "bcryptjs";
 
@@ -12,7 +13,7 @@ class UpdateUserService {
     async execute({ cnpj, razao_social, email, password }: UserRequest) {
         
         if (!cnpj || !razao_social || !email || !password) {
-            throw new Error("Todos os campos devem ser preenchidos.");
+            throw new AppError("Todos os campos devem ser preenchidos.", 400);
         }
 
         try {
@@ -63,7 +64,7 @@ class UpdateUserService {
             };
         
         } catch (error) {
-            throw new Error(`Erro ao atualizar usuário: ${error.message}`);
+            throw new AppError("Erro ao atualizar usuário", 500);
         }
     }
 }

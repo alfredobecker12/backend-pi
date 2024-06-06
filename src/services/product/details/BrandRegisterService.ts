@@ -1,3 +1,4 @@
+import { AppError } from "../../../Errors/appError";
 import prismaClient from "../../../prisma";
 import { CatCliente } from "@prisma/client";
 
@@ -26,7 +27,7 @@ class BrandRegisterService {
 
             // Verifica se já existem representantes de todas as categorias associados à marca
             if (categoriasAssociadas.has('P') && categoriasAssociadas.has('M') && categoriasAssociadas.has('G')) {
-                throw new Error("Já existem representantes associados à marca nas três categorias.");
+                throw new AppError("Já existem representantes associados à marca nas três categorias.", 500);
             }
 
             // Define a próxima categoria a ser associada

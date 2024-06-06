@@ -1,3 +1,4 @@
+import { AppError } from "../../Errors/appError";
 import prismaClient from "../../prisma";
 import { StatusPedido } from "@prisma/client";
 
@@ -55,7 +56,7 @@ class ListOrderService {
             });
 
             if (!representante) {
-                throw new Error("Nenhum cliente ou representante encontrado com o CNPJ fornecido.");
+                throw new AppError("Nenhum cliente ou representante encontrado com o CNPJ fornecido.", 500);
             }
 
             var pedidos = await prismaClient.pedido.findMany({

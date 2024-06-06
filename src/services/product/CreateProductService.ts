@@ -1,3 +1,4 @@
+import { AppError } from "../../Errors/appError";
 import prismaClient from "../../prisma";
 
 interface UserRequest { //Cria a interface de como deve ser a estrutura dos dados para criação de um produto
@@ -19,7 +20,7 @@ class CreateProductService {
         });
 
         if (!categoriaVerify) { 
-            throw new Error("Campo categoria não pode ser nulo");
+            throw new AppError("Campo categoria não pode ser nulo", 400);
         }
         
         const marcaVerify = await prismaClient.marca.findFirst({
@@ -29,7 +30,7 @@ class CreateProductService {
         });
 
         if (!marcaVerify) {
-            throw new Error("Campo marca não pode ser nulo.");
+            throw new AppError("Campo marca não pode ser nulo.", 400);
         }
 
         const productAlreadyExists = await prismaClient.produto.findFirst({
@@ -44,7 +45,7 @@ class CreateProductService {
         });
     
         if (productAlreadyExists) {
-            throw new Error('Produto já existe.');
+            throw new AppError("Produto já existe.", 500);
         }
         
         const newProduct = await prismaClient.produto.create({

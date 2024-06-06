@@ -1,6 +1,7 @@
 import prismaClient from "../../prisma";
 import { compare } from "bcryptjs";
 import { sign } from "jsonwebtoken";
+import { AppError } from "../../Errors/appError";
 
 interface AuthRequest {
   cnpj: string;
@@ -32,7 +33,7 @@ class AuthUserService {
       const passwordMatch = await compare(password, passwordCliente.password);
 
       if (!passwordMatch) {
-        throw {statusCode: 401, message: "Usuário ou senha incorreto"};
+        throw new AppError("Usuário ou senha incorreto", 401);
       }
 
       // Se passou das validações gera o token pro usuario
@@ -71,7 +72,7 @@ class AuthUserService {
       const passwordMatch = await compare(password, passwordRepresentante.password);
 
       if (!passwordMatch) {
-        throw {statusCode: 200, message: "Usuário ou senha incorreto"};
+        throw new AppError("Usuário ou senha incorreto", 400);
       }
 
       // Se passou das validações gera o token pro usuario

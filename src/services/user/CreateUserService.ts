@@ -23,16 +23,16 @@ class CreateUserService {
   async execute({ categoria, razao_social, cnpj, email, password, receita_bruta }: UserRequest) {
     // Verifica se ele enviou um email
     if (!email) {
-      throw new Error("Email incorrect");
+      throw new AppError("Email incorreto", 400);
     }
 
     if (!razao_social) {
-      throw new Error("Razão social incorrect");
+      throw new AppError("Razão social incorrect", 400);
     }
 
     // Verifica se ele enviou um cnpj
     if (!cnpj) {
-      throw new Error("CNPJ incorrect");
+      throw new AppError("CNPJ incorrect", 400);
     }
 
     // Verifica se o CNPJ já está cadastrado
@@ -48,7 +48,7 @@ class CreateUserService {
       }
 
       if (receita_bruta < 0) {        
-        throw new Error("Valor da receita bruta não pode ser inferior a 0.");      
+        throw new AppError("Valor da receita bruta não pode ser inferior a 0.", 400);      
       } else {        
         if (receita_bruta < 10000) {
           this.clientSize = CatCliente.P; 
@@ -100,7 +100,7 @@ class CreateUserService {
       });
   
       if (cnpjAlreadyExists) {
-        throw new Error("Este CNPJ já está cadastrado");
+        throw new AppError("Este CNPJ já está cadastrado", 500);
       }
   
       // Cria a senha

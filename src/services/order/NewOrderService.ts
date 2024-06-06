@@ -1,3 +1,4 @@
+import { AppError } from "../../Errors/appError";
 import prismaClient from "../../prisma";
 import { StatusPedido } from "@prisma/client";
 
@@ -23,7 +24,7 @@ class NewOrderService {
                     },
                 });
                 if (!produto) {
-                    throw new Error(`Produto com ID ${item.id_prod} não encontrado.`);
+                    throw new AppError(`Produto com ID ${item.id_prod} não encontrado.`, 500);
                 }
                 return {
                     id_prod: produto.id,

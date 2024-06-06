@@ -1,12 +1,13 @@
-import { Request, Response } from "express";
+import { Request, Response, NextFunction } from "express";
 import { NewOrderService } from "../../services/order/NewOrderService";
 
 class NewOrderController {
-    async handle(req: Request, res: Response) {
+    async handle(req: Request, res: Response, next: NextFunction) {
+        
+        const newOrderService = new NewOrderService();
+        
         try {
             const { cnpj_cli, cnpj_rep, itens } = req.body;
-
-            const newOrderService = new NewOrderService();
 
             const novoPedido = await newOrderService.execute({
                 cnpj_cli,
@@ -16,7 +17,7 @@ class NewOrderController {
 
             return res.json(novoPedido);
         } catch (error) {
-            return res.status(400).json({ error: error.message });
+            next(error);
         }
     }
 }
