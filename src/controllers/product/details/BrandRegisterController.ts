@@ -1,5 +1,5 @@
 import { Request, Response } from "express";
-import { BrandRegisterService } from "../../services/user/BrandRegisterService";
+import { BrandRegisterService } from "../../../services/product/details/BrandRegisterService";
 
 class BrandRegisterController {
     async handle(req: Request, res: Response) {

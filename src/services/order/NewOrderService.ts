@@ -15,6 +15,7 @@ interface UserRequest {
 class NewOrderService {
     async execute({cnpj_cli, cnpj_rep, itens}: UserRequest) {
         const pedidoItems = await Promise.all(
+            
             itens.map(async (item) => {
                 const produto = await prismaClient.produto.findUnique({
                     where: {

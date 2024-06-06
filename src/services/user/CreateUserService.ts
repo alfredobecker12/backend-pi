@@ -2,6 +2,7 @@ import prismaClient from "../../prisma";
 import { hash } from "bcryptjs";
 import { StatusUser } from "@prisma/client";
 import { CatCliente } from "@prisma/client";
+import { AppError } from "../../Errors/appError";
 
 interface UserRequest {
   categoria: string;
@@ -43,7 +44,7 @@ class CreateUserService {
       });
   
       if (cnpjAlreadyExists) {
-        throw new Error("Este CNPJ já está cadastrado");
+        throw new AppError("CNPJ já cadastrado", 500);
       }
 
       if (receita_bruta < 0) {        
