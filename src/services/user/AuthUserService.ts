@@ -1,6 +1,7 @@
 import prismaClient from "../../prisma";
 import { compare } from "bcryptjs";
 import { sign } from "jsonwebtoken";
+import { AppError } from "../../Errors/appError";
 
 interface AuthRequest {
   cnpj: string;
@@ -9,33 +10,24 @@ interface AuthRequest {
 
 class AuthUserService {
   async execute({ cnpj, password }: AuthRequest) {
-
     const cnpjTable = await prismaClient.cliente.findFirst({
-      where: {
-        cnpj: cnpj,
-      }
+      where: { cnpj }
     });
 
-    if (cnpjTable) { // Se for cliente
+    if (cnpjTable) {
       const infoClient = await prismaClient.cliente.findFirst({
-        where: {
-          cnpj: cnpj,
-        },
+        where: { cnpj }
       });
       const passwordCliente = await prismaClient.login.findFirst({
-          where: {
-            id: infoClient.id_log,
-          }
-        });
+        where: { id: infoClient.id_log }
+      });
 
-      // Verifica se a senha que ele mandou está correta.
       const passwordMatch = await compare(password, passwordCliente.password);
 
       if (!passwordMatch) {
-        throw {statusCode: 401, message: "Usuário ou senha incorreto"};
+        throw new AppError("Senha incorreta", 401);
       }
 
-      // Se passou das validações gera o token pro usuario
       const token = sign(
         {
           cnpj: infoClient.cnpj,
@@ -54,27 +46,26 @@ class AuthUserService {
         email: infoClient.email,
         token: token,
       };
-    
-    
-    } else { // SE FOR REPRESENTANTE
+
+    } else {
       const infoRepresentante = await prismaClient.representante.findFirst({
-        where: {
-          cnpj: cnpj,
-        },
+        where: { cnpj }
       });
+
+      if (!infoRepresentante) {
+        throw new AppError("CNPJ não cadastrado", 404);
+      }
+
       const passwordRepresentante = await prismaClient.login.findFirst({
-          where: {
-            id: infoRepresentante.id_log,
-          }
-        });
-      // Verifica se a senha que ele mandou está correta.
+        where: { id: infoRepresentante.id_log }
+      });
+
       const passwordMatch = await compare(password, passwordRepresentante.password);
 
       if (!passwordMatch) {
-        throw {statusCode: 200, message: "Usuário ou senha incorreto"};
+        throw new AppError("Senha incorreta", 401);
       }
 
-      // Se passou das validações gera o token pro usuario
       const token = sign(
         {
           cnpj: infoRepresentante.cnpj,
@@ -93,9 +84,8 @@ class AuthUserService {
         email: infoRepresentante.email,
         token: token,
       };
-    }    
+    }
   }
 }
-
 
 export { AuthUserService };

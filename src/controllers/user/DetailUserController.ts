@@ -1,15 +1,20 @@
-import { Request, Response } from "express";
+import { Request, Response, NextFunction } from "express";
 import { DetailUserService } from "../../services/user/DetailUserService";
 
 class DetailUserController {
-  async handle(req: Request, res: Response) {
+  async handle(req: Request, res: Response, next: NextFunction) {
     const cnpj = req.cnpj;
-
+    
     const detailUserService = new DetailUserService();
 
-    const user = await detailUserService.execute(cnpj);
+    try {
+      const user = await detailUserService.execute(cnpj);
 
-    return res.json(user);
+      return res.json(user);
+    
+    } catch(error) {
+      next(error)
+    }
   }
 }
 

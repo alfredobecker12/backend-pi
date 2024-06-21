@@ -1,31 +1,31 @@
 import prismaClient from "../../prisma";
 import { hash } from "bcryptjs";
+import { AppError } from "../../Errors/appError"; // Certifique-se de que o caminho está correto
 
 interface UserRequest {
     cnpj: string,
     razao_social: string,
     email: string,
-    password: string
+    password?: string
 }
 
 class UpdateUserService {
     async execute({ cnpj, razao_social, email, password }: UserRequest) {
         
-        if (!cnpj || !razao_social || !email || !password) {
-            throw new Error("Todos os campos devem ser preenchidos.");
+        if (!cnpj || !razao_social || !email) {
+            throw new AppError("Todos os campos obrigatórios devem ser preenchidos.", 400);
         }
 
         try {
-            const passwordHash = await hash(password, 8);
-            
-            const userTypeVerfification = await prismaClient.cliente.findFirst({
+            const userTypeVerification = await prismaClient.cliente.findFirst({
                 where: {
                     cnpj: cnpj
                 }
             });
 
-            let updatedObject;
-            if (userTypeVerfification) {
+            let updatedObject: any;
+
+            if (userTypeVerification) {
                 updatedObject = await prismaClient.cliente.update({
                     where: {
                         cnpj: cnpj
@@ -36,6 +36,16 @@ class UpdateUserService {
                     }
                 });
             } else {
+                updatedObject = await prismaClient.representante.findFirst({
+                    where: {
+                        cnpj: cnpj
+                    }
+                });
+
+                if (!updatedObject) {
+                    throw new AppError("Usuário não encontrado.", 404);
+                }
+
                 updatedObject = await prismaClient.representante.update({
                     where: {
                         cnpj: cnpj
@@ -47,14 +57,17 @@ class UpdateUserService {
                 });
             }
 
-            await prismaClient.login.update({
-                where: {
-                    id: updatedObject.id_log
-                },
-                data: {
-                    password: passwordHash
-                }
-            });
+            if (password) {
+                const passwordHash = await hash(password, 8);
+                await prismaClient.login.update({
+                    where: {
+                        id: updatedObject.id_log
+                    },
+                    data: {
+                        password: passwordHash
+                    }
+                });
+            }
 
             return {
                 cnpj,
@@ -63,7 +76,13 @@ class UpdateUserService {
             };
         
         } catch (error) {
-            throw new Error(`Erro ao atualizar usuário: ${error.message}`);
+            
+            if (error instanceof AppError) {
+                throw error;
+            
+            } else {
+                throw new AppError(`Erro ao atualizar usuário: ${error.message}`, 500);
+            }
         }
     }
 }

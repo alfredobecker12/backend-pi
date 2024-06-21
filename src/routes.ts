@@ -23,6 +23,6 @@ router.get("/produtos", new ListProductController().handle);
 router.post("/cadastro-marca", new BrandRegisterController().handle);
 router.post("/cadastro-pedido", new NewOrderController().handle);
 router.get("/pedidos", new ListOrderController().handle);
-router.patch("/profile/update", new UpdateUserController().handle);
+router.patch("/perfil/atualizar", new UpdateUserController().handle);
 
 export { router };

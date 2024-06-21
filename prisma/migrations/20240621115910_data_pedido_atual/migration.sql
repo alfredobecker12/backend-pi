@@ -1,0 +1,2 @@
+-- AlterTable
+ALTER TABLE "Pedido" ALTER COLUMN "data_pedido" SET DEFAULT CURRENT_TIMESTAMP;

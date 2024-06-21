@@ -17,9 +17,10 @@ class CreateUserController {
         receita_bruta,
       });
 
-      return res.json(user);
+      return res.status(201).json(user); // Adicionei o status 201 para criação bem-sucedida
+    
     } catch (error) {
-      next(error);
+      next(error); // Passa o erro para o middleware de tratamento de erros
     }
   }
 }
