@@ -17,7 +17,7 @@ const router = Router();
 
 //-- ROTAS USER --
 router.post("/cadastro", new CreateUserController().handle);
-router.get("/login", new AuthUserController().handle);
+router.post("/login", new AuthUserController().handle);
 router.get("/me", isAuthenticated, new DetailUserController().handle);
 router.post("/cadastro-produto", new CreateProductController().handle);
 router.post("/cadastro-categoria", new NewCategoryController().handle);
