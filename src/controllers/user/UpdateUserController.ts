@@ -19,9 +19,8 @@ class UpdateUserController {
             res.json(updateInfos);
         
         } catch (error) {
-            next(error);
+          next(error);
         }
-        
     }
 }
 

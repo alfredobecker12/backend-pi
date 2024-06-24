@@ -3,11 +3,10 @@ import { ListOrderService } from "../../services/order/ListOrderService";
 
 class ListOrderController {
     async handle(req: Request, res: Response, next: NextFunction) {
-        const {cnpj} = req.body;
+            const {cnpj} = req.body;
 
             const listOrderService = new ListOrderService();
 
-        
         try { 
             const orders = await listOrderService.execute({
                 cnpj
@@ -16,7 +15,7 @@ class ListOrderController {
             return res.json(orders);
         
         } catch (error) {
-            next(error)
+            next(error);
         }
     }
 }

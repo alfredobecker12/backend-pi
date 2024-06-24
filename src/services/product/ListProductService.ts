@@ -2,7 +2,7 @@ import { AppError } from "../../Errors/appError";
 import prismaClient from "../../prisma";
 
 interface UserRequest {
-    categoria: string;
+    categoria?: string;
 }
 
 class ListProductService {
@@ -43,12 +43,15 @@ class ListProductService {
                 return produtos;
             }
         
-        } catch (error) {
+        } catch(error) {
            
-            if (error instanceof AppError) {
+            if(error instanceof AppError) {
                 throw error;
+            
+            } else {
+                throw new AppError(`Erro ao buscar produtos: ${error}`, 500);
             }
-            throw new AppError("Erro ao buscar produtos", 500);
+            
         }
     }
 }

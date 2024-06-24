@@ -62,9 +62,9 @@ class ListOrderService {
                     },
                 });
 
-                if (!representante) {
-                    throw new AppError("Nenhum cliente ou representante encontrado com o CNPJ fornecido.", 404);
-                }
+            if (!representante) {
+                throw new AppError("Nenhum cliente ou representante encontrado com o CNPJ fornecido.", 500);
+            }
 
                 pedidos = await prismaClient.pedido.findMany({
                     where: {

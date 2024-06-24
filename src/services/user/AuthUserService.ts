@@ -25,7 +25,7 @@ class AuthUserService {
       const passwordMatch = await compare(password, passwordCliente.password);
 
       if (!passwordMatch) {
-        throw new AppError("Senha incorreta", 401);
+        throw new AppError("Usuário ou senha incorreto", 401);
       }
 
       const token = sign(
@@ -63,7 +63,7 @@ class AuthUserService {
       const passwordMatch = await compare(password, passwordRepresentante.password);
 
       if (!passwordMatch) {
-        throw new AppError("Senha incorreta", 401);
+        throw new AppError("Usuário ou senha incorreto", 400);
       }
 
       const token = sign(

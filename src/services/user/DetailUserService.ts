@@ -14,7 +14,7 @@ class DetailUserService {
       if (clientTable) { // SE FOR CLIENTE
         return {
           cnpj: cnpj,
-          categoria: "cliente",
+          categoria: "C",
           razao_social: clientTable.razao_social,
           email: clientTable.email
         };
@@ -29,7 +29,7 @@ class DetailUserService {
       if (representateTable) { // SE FOR REPRESENTANTE
         return {
           cnpj: cnpj,
-          categoria: "representante",
+          categoria: "R",
           razao_social: representateTable.razao_social,
           email: representateTable.email
         };

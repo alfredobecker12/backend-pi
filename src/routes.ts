@@ -10,6 +10,8 @@ import { NewOrderController } from "./controllers/order/NewOrderController";
 import { NewCategoryController } from "./controllers/product/details/NewCategoryController";
 import { ListOrderController } from "./controllers/order/ListOrderController";
 import { UpdateUserController } from "./controllers/user/UpdateUserController";
+import { ListCategoryController } from "./controllers/product/details/ListCategorysController";
+import { ListBrandController } from "./controllers/product/details/ListBrandController";
 
 const router = Router();
 
@@ -24,5 +26,7 @@ router.post("/cadastro-marca", new BrandRegisterController().handle);
 router.post("/cadastro-pedido", new NewOrderController().handle);
 router.get("/pedidos", new ListOrderController().handle);
 router.patch("/perfil/atualizar", new UpdateUserController().handle);
+router.get("/categorias", new ListCategoryController().handle); 
+router.get("/marcas", new ListBrandController().handle);
 
 export { router };

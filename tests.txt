@@ -36,7 +36,7 @@
     "peso": 1.5,
     "preco": 6.99,
     "categoria": "Construção",
-    "marca": "tijolosLTDA"
+    "marca": "tijoloLTDA"
 }
 
 //produto

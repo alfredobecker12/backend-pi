@@ -6,6 +6,7 @@ class ListProductController{
         const {categoria} = req.body;
         
         const listProductService = new ListProductService();
+        
         try {
             const produtos = await listProductService.execute({categoria});
 

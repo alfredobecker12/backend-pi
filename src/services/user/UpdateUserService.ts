@@ -1,6 +1,6 @@
+import { AppError } from "../../Errors/appError";
 import prismaClient from "../../prisma";
 import { hash } from "bcryptjs";
-import { AppError } from "../../Errors/appError"; // Certifique-se de que o caminho está correto
 
 interface UserRequest {
     cnpj: string,
