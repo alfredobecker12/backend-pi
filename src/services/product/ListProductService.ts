@@ -11,19 +11,19 @@ class ListProductService {
         try {
             
             if (categoria) {
-                const categoria_id = await prismaClient.categoriaProduto.findFirst({
+                const categoriaFiltro = await prismaClient.categoriaProduto.findFirst({
                     where: {
                         descricao: categoria,
                     }
                 });
 
-                if (!categoria_id) {
+                if (!categoriaFiltro) {
                     throw new AppError("Categoria não encontrada", 404);
                 }
 
                 const produtos_filtrados = await prismaClient.produto.findMany({
                     where: {
-                        id_cat: categoria_id.id,
+                        id_cat: categoriaFiltro.id,
                     }
                 });
 

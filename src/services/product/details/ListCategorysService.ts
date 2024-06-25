@@ -5,13 +5,16 @@ class ListCategoryService {
     async execute() {
 
         try {
-            const categorys = await prismaClient.categoriaProduto.findMany();
+            const categories = await prismaClient.categoriaProduto.findMany();
 
-            if(!categorys) {
+            if(!categories) {
                 throw new AppError("Não foram encontradas categorias registras", 404);
             
             } else {
-                return categorys;
+                return categories.map((category) => ({
+                    id: category.id,
+                    nome: category.descricao,
+                  }));
             }
             
         } catch(error) {
