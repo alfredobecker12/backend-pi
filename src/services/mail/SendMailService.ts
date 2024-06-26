@@ -75,7 +75,7 @@ class SendMailService {
                     name: 'Repnet',
                     address: process.env.USER
                 },
-                to: repData.email,
+                to: [repData.email, clientData.email],
                 subject: `Pedido realizado por ${clientData.razao_social}`,
                 text: `Olá ${repData.razao_social},
 

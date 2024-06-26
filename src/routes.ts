@@ -29,6 +29,6 @@ router.get("/pedidos", new ListOrderController().handle);
 router.patch("/perfil/atualizar", new UpdateUserController().handle);
 router.get("/categorias", new ListCategoryController().handle); 
 router.get("/marcas", new ListBrandController().handle);
-router.get("/enviar-pedido", new SendMailController().handle);
+router.post("/enviar-pedido", new SendMailController().handle);
 
 export { router };
