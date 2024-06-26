@@ -65,10 +65,18 @@ class SendMailService {
                 throw new AppError('Representante não encontrado', 404);
             }
 
-            let pedidoDetalhes = '';
-            pedidoData.pedidoProduto.forEach((item) => {
-                pedidoDetalhes += `Produto: ${item.produto.descricao}\nQuantidade: ${item.quantidade}\nPreço Unitário: R$${item.produto.preco}\n\n`;
+            // Formatação do valor total para "R$50.000,00"
+            const formattedValorTotal = pedidoData.valor_total.toLocaleString('pt-BR', {
+                style: 'currency',
+                currency: 'BRL'
             });
+
+            // Construção dos detalhes do pedido
+            const pedidoDetalhes = pedidoData.pedidoProduto.map((item) => `
+Produto: ${item.produto.descricao}
+Quantidade: ${item.quantidade}
+Preço Unitário: R$${item.produto.preco.toLocaleString('pt-BR')}
+`).join('\n');
 
             const mailOptions = {
                 from: {
@@ -85,7 +93,7 @@ Detalhes do pedido:
 ID do Pedido: ${id_pedido}
 CNPJ do Cliente: ${pedidoData.cnpj_cli}
 CNPJ do Representante: ${pedidoData.cnpj_rep}
-Valor Total: R$${pedidoData.valor_total}
+Valor Total: ${formattedValorTotal}
 
 Itens do Pedido:
 ${pedidoDetalhes}
