@@ -91,8 +91,10 @@ class NewOrderService {
 
             return novoPedido;
         } catch (error) {
+            
             if (error instanceof AppError) {
                 throw error;
+            
             } else {
                 throw new AppError(`Não foi possível criar um pedido: ${error}`, 500);
             }

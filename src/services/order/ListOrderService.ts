@@ -94,7 +94,7 @@ class ListOrderService {
                 valor_total: pedido.valor_total,
                 cliente: pedido.cliente?.razao_social || "",
                 representante: pedido.representante?.razao_social || "",
-                produtos: pedido.pedidoProduto.map((item) => ({
+                produtos: pedido.pedidoProduto.map((item: any) => ({
                     id: item.produto.id,
                     descricao: item.produto.descricao,
                     quantidade: item.quantidade,

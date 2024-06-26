@@ -12,6 +12,7 @@ import { ListOrderController } from "./controllers/order/ListOrderController";
 import { UpdateUserController } from "./controllers/user/UpdateUserController";
 import { ListCategoryController } from "./controllers/product/details/ListCategorysController";
 import { ListBrandController } from "./controllers/product/details/ListBrandController";
+import { SendMailController } from "./controllers/mail/SendMailController";
 
 const router = Router();
 
@@ -28,5 +29,6 @@ router.get("/pedidos", new ListOrderController().handle);
 router.patch("/perfil/atualizar", new UpdateUserController().handle);
 router.get("/categorias", new ListCategoryController().handle); 
 router.get("/marcas", new ListBrandController().handle);
+router.get("/enviar-pedido", new SendMailController().handle);
 
 export { router };
