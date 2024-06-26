@@ -22,7 +22,7 @@ router.post("/login", new AuthUserController().handle);
 router.get("/me", isAuthenticated, new DetailUserController().handle);
 router.post("/cadastro-produto", new CreateProductController().handle);
 router.post("/cadastro-categoria", new NewCategoryController().handle);
-router.get("/produtos", new ListProductController().handle);
+router.post("/produtos", new ListProductController().handle);
 router.post("/cadastro-marca", new BrandRegisterController().handle);
 router.post("/cadastro-pedido", new NewOrderController().handle);
 router.get("/pedidos", new ListOrderController().handle);

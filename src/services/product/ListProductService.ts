@@ -7,9 +7,7 @@ interface UserRequest {
 
 class ListProductService {
     async execute({ categoria }: UserRequest) {
-        
         try {
-            
             if (categoria) {
                 const categoriaFiltro = await prismaClient.categoriaProduto.findFirst({
                     where: {
@@ -24,6 +22,10 @@ class ListProductService {
                 const produtos_filtrados = await prismaClient.produto.findMany({
                     where: {
                         id_cat: categoriaFiltro.id,
+                    },
+                    include: {
+                        categoriaProduto: true,
+                        marca: true,
                     }
                 });
 
@@ -31,27 +33,43 @@ class ListProductService {
                     throw new AppError("Nenhum produto encontrado para essa categoria", 404);
                 }
 
-                return produtos_filtrados;
-            
+                return produtos_filtrados.map(produto => ({
+                    id: produto.id,
+                    descricao: produto.descricao,
+                    validade: produto.validade,
+                    peso: produto.peso,
+                    preco: produto.preco,
+                    Categoria: produto.categoriaProduto.descricao,
+                    Marca: produto.marca.razao_social
+                }));
             } else {
-                const produtos = await prismaClient.produto.findMany();
+                const produtos = await prismaClient.produto.findMany({
+                    include: {
+                        categoriaProduto: true,
+                        marca: true,
+                    }
+                });
 
                 if (!produtos.length) {
                     throw new AppError("Nenhum produto encontrado", 404);
                 }
 
-                return produtos;
+                return produtos.map(produto => ({
+                    id: produto.id,
+                    descricao: produto.descricao,
+                    validade: produto.validade,
+                    peso: produto.peso,
+                    preco: produto.preco,
+                    Categoria: produto.categoriaProduto.descricao,
+                    Marca: produto.marca.razao_social
+                }));
             }
-        
-        } catch(error) {
-           
-            if(error instanceof AppError) {
+        } catch (error) {
+            if (error instanceof AppError) {
                 throw error;
-            
             } else {
                 throw new AppError(`Erro ao buscar produtos: ${error}`, 500);
             }
-            
         }
     }
 }
