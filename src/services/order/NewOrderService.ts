@@ -89,7 +89,7 @@ class NewOrderService {
                 },
             });
 
-            return "ID do pedido: "+novoPedido.id;
+            return novoPedido.id;
         } catch (error) {
             
             if (error instanceof AppError) {
