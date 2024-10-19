@@ -1,9 +1,3 @@
-// This is your Prisma schema file,
-// learn more about it in the docs: https://pris.ly/d/prisma-schema
-
-// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
-// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
-
 generator client {
   provider = "prisma-client-js"
 }
@@ -13,7 +7,6 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
-// criar uma migration: yarn prisma migrate dev
 model Representante {
   cnpj               String               @id
   razao_social       String
@@ -27,16 +20,16 @@ model Representante {
 }
 
 model Cliente {
-  cnpj          String     @id
-  razao_social  String
-  status        StatusUser
-  email         String
-  data_cadastro DateTime   @default(now())
-  receita_bruta Float
-  categoria_cliente  CatCliente
-  id_log        Int
-  login         Login      @relation(fields: [id_log], references: [id])
-  pedido        Pedido[]
+  cnpj              String     @id
+  razao_social      String
+  status            StatusUser
+  email             String
+  data_cadastro     DateTime   @default(now())
+  id_log            Int
+  receita_bruta     Float
+  categoria_cliente CatCliente
+  login             Login      @relation(fields: [id_log], references: [id])
+  pedido            Pedido[]
 }
 
 model Login {
@@ -47,20 +40,20 @@ model Login {
 }
 
 model Marca {
-  cnpj               String                  @id
   razao_social       String
+  cnpj               String               @id
   produto            Produto[]
   RepresentanteMarca RepresentanteMarca[]
 }
 
 model RepresentanteMarca {
-  id                Int                @id @default(autoincrement())
-  cnpjRepresentante String
-  cnpjMarca         String
+  cnpjRepresentante       String
+  id                      Int           @id @default(autoincrement())
+  cnpjMarca               String
   categoria_representante CatCliente
-  data_cadastro     DateTime           @default(now())
-  representante     Representante      @relation(fields: [cnpjRepresentante], references: [cnpj])
-  marca             Marca              @relation(fields: [cnpjMarca], references: [cnpj])
+  data_cadastro           DateTime      @default(now())
+  marca                   Marca         @relation(fields: [cnpjMarca], references: [cnpj])
+  representante           Representante @relation(fields: [cnpjRepresentante], references: [cnpj])
 }
 
 model CategoriaProduto {
@@ -78,8 +71,8 @@ model Produto {
   id_cat           Int
   cnpj_marca       String
   pedidoProduto    PedidoProduto[]
-  categoriaProduto CategoriaProduto @relation(fields: [id_cat], references: [id])
   marca            Marca            @relation(fields: [cnpj_marca], references: [cnpj])
+  categoriaProduto CategoriaProduto @relation(fields: [id_cat], references: [id])
 }
 
 model Pedido {
@@ -95,13 +88,20 @@ model Pedido {
 }
 
 model PedidoProduto {
-  id_prod Int
-  id_ped  Int
+  id_prod    Int
+  id_ped     Int
   quantidade Int
-  pedido  Pedido  @relation(fields: [id_ped], references: [id])
-  produto Produto @relation(fields: [id_prod], references: [id])
+  pedido     Pedido  @relation(fields: [id_ped], references: [id])
+  produto    Produto @relation(fields: [id_prod], references: [id])
 
   @@id([id_prod, id_ped])
+}
+
+model AutenticacaoLogin {
+  id           Int      @id @default(autoincrement())
+  email        String
+  codigo       Int
+  data_criacao DateTime @default(now())
 }
 
 enum StatusUser {

@@ -12,7 +12,7 @@ import { ListOrderController } from "./controllers/order/ListOrderController";
 import { UpdateUserController } from "./controllers/user/UpdateUserController";
 import { ListCategoryController } from "./controllers/product/details/ListCategorysController";
 import { ListBrandController } from "./controllers/product/details/ListBrandController";
-import { SendMailController } from "./controllers/mail/SendMailController";
+import { SendOrderController } from "./controllers/mail/SendOrderController";
 
 const router = Router();
 
@@ -29,6 +29,6 @@ router.get("/pedidos", new ListOrderController().handle);
 router.patch("/perfil/atualizar", new UpdateUserController().handle);
 router.get("/categorias", new ListCategoryController().handle); 
 router.get("/marcas", new ListBrandController().handle);
-router.post("/enviar-pedido", new SendMailController().handle);
+router.post("/enviar-pedido", new SendOrderController().handle);
 
 export { router };

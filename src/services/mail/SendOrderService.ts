@@ -22,7 +22,7 @@ const transporter = nodemailer.createTransport({
     }
 });
 
-class SendMailService {
+class SendOrderService {
     async execute({ id_pedido }: PedidoRequest) {
         try {
             const pedidoData = await prismaClient.pedido.findFirst({
@@ -73,10 +73,10 @@ class SendMailService {
 
             // Construção dos detalhes do pedido
             const pedidoDetalhes = pedidoData.pedidoProduto.map((item) => `
-Produto: ${item.produto.descricao}
-Quantidade: ${item.quantidade}
-Preço Unitário: R$${item.produto.preco.toLocaleString('pt-BR')}
-`).join('\n');
+                Produto: ${item.produto.descricao}
+                Quantidade: ${item.quantidade}
+                Preço Unitário: R$${item.produto.preco.toLocaleString('pt-BR')}
+                `).join('\n');
 
             const mailOptions = {
                 from: {
@@ -87,19 +87,19 @@ Preço Unitário: R$${item.produto.preco.toLocaleString('pt-BR')}
                 subject: `Pedido realizado por ${clientData.razao_social}`,
                 text: `Olá ${repData.razao_social},
 
-Um novo pedido foi realizado pelo cliente ${clientData.razao_social}.
+                Um novo pedido foi realizado pelo cliente ${clientData.razao_social}.
 
-Detalhes do pedido:
-ID do Pedido: ${id_pedido}
-CNPJ do Cliente: ${pedidoData.cnpj_cli}
-CNPJ do Representante: ${pedidoData.cnpj_rep}
-Valor Total: ${formattedValorTotal}
+                Detalhes do pedido:
+                ID do Pedido: ${id_pedido}
+                CNPJ do Cliente: ${pedidoData.cnpj_cli}
+                CNPJ do Representante: ${pedidoData.cnpj_rep}
+                Valor Total: ${formattedValorTotal}
 
-Itens do Pedido:
-${pedidoDetalhes}
+                Itens do Pedido:
+                ${pedidoDetalhes}
 
-Atenciosamente,
-Equipe Repnet`
+                Atenciosamente,
+                Equipe Repnet`
             };
 
             await transporter.sendMail(mailOptions);
@@ -112,4 +112,4 @@ Equipe Repnet`
     }
 }
 
-export { SendMailService };
+export { SendOrderService };

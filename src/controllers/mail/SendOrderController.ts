@@ -1,14 +1,14 @@
 import { Request, Response, NextFunction } from 'express';
-import { SendMailService } from '../../services/mail/SendMailService';
+import { SendOrderService } from '../../services/mail/SendOrderService';
 
-class SendMailController {
+class SendOrderController {
     async handle(req: Request, res: Response, next: NextFunction) {
         const { id_pedido } = req.body;
 
-        const sendMailService = new SendMailService();
+        const sendOrderService = new SendOrderService();
 
         try {
-            await sendMailService.execute({ id_pedido });
+            await sendOrderService.execute({ id_pedido });
 
             return res.status(200).json({ message: 'Email enviado com sucesso' });
         
@@ -18,4 +18,4 @@ class SendMailController {
     }
 }
 
-export { SendMailController };
+export { SendOrderController };
