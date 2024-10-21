@@ -1,7 +1,7 @@
-import { transporter } from '../../middlewares/mailConfig';
 import prismaClient from '../../prisma';
 import { AppError } from '../../Errors/appError';
-import dotenv from 'dotenv';
+import { transporter } from '../../middlewares/mailConfig';
+
 
 interface PedidoRequest {
     id_pedido: number;
