@@ -3,22 +3,22 @@ import { AuthUserService } from "../../services/user/AuthUserService";
 
 class AuthUserController {
   async handle(req: Request, res: Response, next: NextFunction) {
-    const { cnpj, password } = req.body;
-    
+    const { cnpj, category, code } = req.body;
+
     const authUserService = new AuthUserService();
 
     try {
-      const auth = await authUserService.execute({
+      const authResponse = await authUserService.execute({
         cnpj,
-        password,
+        category,
+        code,
       });
-      console.log(auth)
-      return res.json(auth);
+      console.log(authResponse);
+      return res.json(authResponse);
     
     } catch (error) {
-      next(error);
+      next(error); 
     }
-    
   }
 }
 
