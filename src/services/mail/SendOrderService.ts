@@ -1,12 +1,37 @@
+<<<<<<< HEAD
 import prismaClient from '../../prisma';
 import { AppError } from '../../Errors/appError';
 import { transporter } from '../../middlewares/mailConfig';
 
+=======
+import nodemailer from 'nodemailer';
+import prismaClient from '../../prisma';
+import { AppError } from '../../Errors/appError';
+import dotenv from 'dotenv';
+
+// Carregar as variáveis de ambiente do arquivo .env
+dotenv.config();
+
+if (!process.env.USER || !process.env.USER_PASS) {
+    throw new Error('As variáveis de ambiente USER e USER_PASS devem estar definidas');
+}
+>>>>>>> 014f516583484c0bbdbc23fc85e5d700bd1c59e5
 
 interface PedidoRequest {
     id_pedido: number;
 }
 
+<<<<<<< HEAD
+=======
+const transporter = nodemailer.createTransport({
+    service: 'gmail',
+    auth: {
+        user: process.env.USER,
+        pass: process.env.USER_PASS
+    }
+});
+
+>>>>>>> 014f516583484c0bbdbc23fc85e5d700bd1c59e5
 class SendOrderService {
     async execute({ id_pedido }: PedidoRequest) {
         try {

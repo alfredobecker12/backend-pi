@@ -13,16 +13,23 @@ import { UpdateUserController } from "./controllers/user/UpdateUserController";
 import { ListCategoryController } from "./controllers/product/details/ListCategorysController";
 import { ListBrandController } from "./controllers/product/details/ListBrandController";
 import { SendOrderController } from "./controllers/mail/SendOrderController";
+<<<<<<< HEAD
 import { SendAuthController } from "./controllers/mail/SendAuthController";
 import { LoginUserController } from "./controllers/user/LoginUserController";
+=======
+>>>>>>> 014f516583484c0bbdbc23fc85e5d700bd1c59e5
 
 const router = Router();
 
 //-- ROTAS USER --
 router.post("/cadastro", new CreateUserController().handle);
+<<<<<<< HEAD
 router.post("/login", new LoginUserController().handle); // Verifica as credenciasi
 router.post("/autenticar", new SendAuthController().handle); // Verifica o email e manda o código
 router.post("/autenticar-login", new AuthUserController().handle); // Verifica o código e retorna o token
+=======
+router.post("/login", new AuthUserController().handle);
+>>>>>>> 014f516583484c0bbdbc23fc85e5d700bd1c59e5
 router.get("/me", isAuthenticated, new DetailUserController().handle);
 router.post("/cadastro-produto", new CreateProductController().handle);
 router.post("/cadastro-categoria", new NewCategoryController().handle);
