@@ -1,0 +1,122 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model Representante {
+  cnpj               String               @id
+  razao_social       String
+  status             StatusUser
+  email              String
+  data_cadastro      DateTime             @default(now())
+  id_log             Int
+  pedido             Pedido[]
+  login              Login                @relation(fields: [id_log], references: [id])
+  RepresentanteMarca RepresentanteMarca[]
+}
+
+model Cliente {
+  cnpj              String     @id
+  razao_social      String
+  status            StatusUser
+  email             String
+  data_cadastro     DateTime   @default(now())
+  id_log            Int
+  receita_bruta     Float
+  categoria_cliente CatCliente
+  login             Login      @relation(fields: [id_log], references: [id])
+  pedido            Pedido[]
+}
+
+model Login {
+  id            Int             @id @default(autoincrement())
+  password      String          @unique
+  cliente       Cliente[]
+  representante Representante[]
+}
+
+model Marca {
+  razao_social       String
+  cnpj               String               @id
+  produto            Produto[]
+  RepresentanteMarca RepresentanteMarca[]
+}
+
+model RepresentanteMarca {
+  cnpjRepresentante       String
+  id                      Int           @id @default(autoincrement())
+  cnpjMarca               String
+  categoria_representante CatCliente
+  data_cadastro           DateTime      @default(now())
+  marca                   Marca         @relation(fields: [cnpjMarca], references: [cnpj])
+  representante           Representante @relation(fields: [cnpjRepresentante], references: [cnpj])
+}
+
+model CategoriaProduto {
+  id        Int       @id @default(autoincrement())
+  descricao String
+  produto   Produto[]
+}
+
+model Produto {
+  id               Int              @id @default(autoincrement())
+  descricao        String
+  validade         String?
+  peso             Int?
+  preco            Float
+  id_cat           Int
+  cnpj_marca       String
+  pedidoProduto    PedidoProduto[]
+  marca            Marca            @relation(fields: [cnpj_marca], references: [cnpj])
+  categoriaProduto CategoriaProduto @relation(fields: [id_cat], references: [id])
+}
+
+model Pedido {
+  id            Int             @id @default(autoincrement())
+  data_pedido   DateTime        @default(now())
+  status        StatusPedido
+  valor_total   Float
+  cnpj_cli      String
+  cnpj_rep      String
+  cliente       Cliente         @relation(fields: [cnpj_cli], references: [cnpj])
+  representante Representante   @relation(fields: [cnpj_rep], references: [cnpj])
+  pedidoProduto PedidoProduto[]
+}
+
+model PedidoProduto {
+  id_prod    Int
+  id_ped     Int
+  quantidade Int
+  pedido     Pedido  @relation(fields: [id_ped], references: [id])
+  produto    Produto @relation(fields: [id_prod], references: [id])
+
+  @@id([id_prod, id_ped])
+}
+
+model AutenticacaoLogin {
+  id           Int      @id @default(autoincrement())
+  email        String
+  codigo       Int
+  data_criacao DateTime @default(now())
+}
+
+enum StatusUser {
+  ATIVO
+  INATIVO
+}
+
+enum StatusPedido {
+  PENDENTE
+  CANCELADO
+  FINALIZADO
+}
+
+enum CatCliente {
+  P
+  M
+  G
+}
