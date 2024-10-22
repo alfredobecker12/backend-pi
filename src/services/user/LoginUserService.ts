@@ -1,6 +1,7 @@
 import prismaClient from "../../prisma";
 import { compare } from "bcryptjs";
 import { AppError } from "../../Errors/appError";
+import MailSender from "../mail/MailSender";
 
 interface UserData {
   cnpj: string;
@@ -9,28 +10,52 @@ interface UserData {
 
 class LoginUserService {
   async execute({ cnpj, password }: UserData) {
+    // Validação básica
+    if (!cnpj || !password) {
+      throw new AppError("CNPJ e senha são obrigatórios", 400);
+    }
+
+    // Função para criação e envio do código de autenticação
+    const createAndSendAuthCode = async (email: string, authCode: number, subject: string, text: string) => {
+      try {
+        await prismaClient.autenticacaoLogin.create({
+          data: { email, codigo: authCode }
+        });
+        await MailSender.sendMail(email, subject, text);
+      } catch (error) {
+        throw new AppError(`Erro ao criar código de autenticação ou enviar email: ${error.message}`, 500);
+      }
+    };
+
+    // Geração do código de autenticação
+    const authCode = Math.floor(Math.random() * (999999 - 100000 + 1)) + 100000;
+    const subject = "Código de autenticação";
+    const text = `O seu código de autenticação é ${authCode}. Você tem 2 minutos para usá-lo.`;
+
     // Tenta encontrar o cliente pelo CNPJ
-    const cliente = await prismaClient.cliente.findFirst({
-      where: { cnpj },
-    });
+    const cliente = await prismaClient.cliente.findFirst({ where: { cnpj } });
 
     if (cliente) {
       const passwordCliente = await prismaClient.login.findFirst({
         where: { id: cliente.id_log },
       });
 
-      const passwordMatch = await compare(password, passwordCliente.password);
+      if (!passwordCliente) {
+        throw new AppError("Usuário ou senha incorreto", 401);
+      }
 
+      const passwordMatch = await compare(password, passwordCliente.password);
       if (!passwordMatch) {
         throw new AppError("Usuário ou senha incorreto", 401);
       }
 
-      // Aqui você pode retornar o token ou outros dados, se necessário
+      // Criar e enviar código para o cliente
+      await createAndSendAuthCode(cliente.email, authCode, subject, text);
+
       return {
         cnpj: cliente.cnpj,
         categoria: "C",
         email: cliente.email,
-        // token: gerado aqui se necessário
       };
     }
 
@@ -47,21 +72,22 @@ class LoginUserService {
       where: { id: representante.id_log },
     });
 
-    const passwordMatchRepresentante = await compare(
-      password,
-      passwordRepresentante.password
-    );
+    if (!passwordRepresentante) {
+      throw new AppError("Usuário ou senha incorreto", 401);
+    }
 
+    const passwordMatchRepresentante = await compare(password, passwordRepresentante.password);
     if (!passwordMatchRepresentante) {
       throw new AppError("Usuário ou senha incorreto", 400);
     }
 
-    // Aqui você pode retornar o token ou outros dados, se necessário
+    // Criar e enviar código para o representante
+    await createAndSendAuthCode(representante.email, authCode, subject, text);
+
     return {
       cnpj: representante.cnpj,
       categoria: "R",
       email: representante.email,
-      // token: gerado aqui se necessário
     };
   }
 }

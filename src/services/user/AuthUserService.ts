@@ -1,29 +1,26 @@
 import prismaClient from "../../prisma";
 import { AppError } from "../../Errors/appError";
 import { sign } from "jsonwebtoken";
-import { Cliente, Representante } from "@prisma/client"; 
+import { Cliente, Representante } from "@prisma/client";
 
 interface AuthRequest {
   cnpj: string;
   category: string;
-  code: number; 
+  code: number;
 }
 
 class AuthUserService {
   async execute({ cnpj, category, code }: AuthRequest) {
     let userInfo: Cliente | Representante | null;
 
-    // Verifica se a categoria é 'C' (Cliente) ou 'R' (Representante)
-    if (category === 'C') {
+    if (category == "C") {
       userInfo = await prismaClient.cliente.findFirst({
-        where: { cnpj }
+        where: { cnpj },
       });
-    
-    } else if (category === 'R') {
+    } else if (category == "R") {
       userInfo = await prismaClient.representante.findFirst({
-        where: { cnpj }
+        where: { cnpj },
       });
-    
     } else {
       throw new AppError("Categoria inválida", 400);
     }
@@ -33,7 +30,9 @@ class AuthUserService {
     }
 
     const authCode = await prismaClient.autenticacaoLogin.findFirst({
-      where: { email: userInfo.email }
+      where: {
+        email: userInfo.email,
+      },
     });
 
     if (!authCode) {
@@ -41,8 +40,19 @@ class AuthUserService {
     }
 
     if (authCode.codigo !== code) {
+      await prismaClient.autenticacaoLogin.delete({
+        where: {
+          id: authCode.id,
+        },
+      });
       throw new AppError("Código incorreto", 400);
     }
+
+    await prismaClient.autenticacaoLogin.delete({
+      where: {
+        id: authCode.id,
+      },
+    });
 
     const token = sign(
       {
