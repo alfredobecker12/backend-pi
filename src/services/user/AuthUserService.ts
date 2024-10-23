@@ -5,22 +5,24 @@ import { Cliente, Representante } from "@prisma/client";
 
 interface AuthRequest {
   cnpj: string;
-  category: string;
+  categoria: string;
   code: number;
 }
 
 class AuthUserService {
-  async execute({ cnpj, category, code }: AuthRequest) {
+  async execute({ cnpj, categoria, code }: AuthRequest) {
     let userInfo: Cliente | Representante | null;
 
-    if (category == "C") {
+    if (categoria == "C") {
       userInfo = await prismaClient.cliente.findFirst({
         where: { cnpj },
       });
-    } else if (category == "R") {
+    
+    } else if (categoria == "R") {
       userInfo = await prismaClient.representante.findFirst({
         where: { cnpj },
       });
+    
     } else {
       throw new AppError("Categoria inválida", 400);
     }
@@ -45,6 +47,7 @@ class AuthUserService {
           id: authCode.id,
         },
       });
+      
       throw new AppError("Código incorreto", 400);
     }
 
@@ -68,7 +71,7 @@ class AuthUserService {
 
     return {
       cnpj: userInfo.cnpj,
-      categoria: category,
+      categoria: categoria,
       email: userInfo.email,
       token: token,
     };

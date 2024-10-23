@@ -2,6 +2,7 @@ import prismaClient from "../../prisma";
 import { compare } from "bcryptjs";
 import { AppError } from "../../Errors/appError";
 import MailSender from "../mail/MailSender";
+import { AutenticacaoLogin } from "@prisma/client";
 
 interface UserData {
   cnpj: string;
@@ -17,11 +18,39 @@ class LoginUserService {
 
     // Função para criação e envio do código de autenticação
     const createAndSendAuthCode = async (email: string, authCode: number, subject: string, text: string) => {
+      let authCodeRegistered: AutenticacaoLogin;
+      
+      try {
+          authCodeRegistered = await prismaClient.autenticacaoLogin.findFirst({
+          where: {
+            email: email
+          }
+        });
+
+      } catch (error) {
+        throw new AppError(`Erro ao consultar existência do código: ${error}`, 500);
+      }
+      
+      if(authCodeRegistered) {
+          
+        try {
+          await prismaClient.autenticacaoLogin.delete({
+            where: {
+              id: authCodeRegistered.id
+            }
+          });
+        
+        } catch (error) {
+          throw new AppError(`Erro ao excluir registro de código exixtente: ${error}`, 500);
+        }
+      }
+      
       try {
         await prismaClient.autenticacaoLogin.create({
           data: { email, codigo: authCode }
         });
         await MailSender.sendMail(email, subject, text);
+      
       } catch (error) {
         throw new AppError(`Erro ao criar código de autenticação ou enviar email: ${error.message}`, 500);
       }
