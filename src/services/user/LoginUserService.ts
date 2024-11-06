@@ -82,6 +82,7 @@ class LoginUserService {
       await createAndSendAuthCode(cliente.email, authCode, subject, text);
 
       return {
+        razao_social: cliente.razao_social,
         cnpj: cliente.cnpj,
         categoria: "C",
         email: cliente.email,
@@ -114,6 +115,7 @@ class LoginUserService {
     await createAndSendAuthCode(representante.email, authCode, subject, text);
 
     return {
+      razao_social: representante.razao_social,
       cnpj: representante.cnpj,
       categoria: "R",
       email: representante.email,

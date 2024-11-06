@@ -1,9 +1,9 @@
-import prismaClient from '../../prisma';
-import { AppError } from '../../Errors/appError';
-import MailSender from '../mail/MailSender';
+import prismaClient from "../../prisma";
+import { AppError } from "../../Errors/appError";
+import MailSender from "../mail/MailSender";
 
 interface PedidoRequest {
-    id_pedido: number;
+  id_pedido: number;
 }
 
 class SendOrderService {
@@ -21,46 +21,53 @@ class SendOrderService {
               produto: {
                 select: {
                   descricao: true,
-                  preco: true
-                }
-              }
-            }
-          }
-        }
+                  preco: true,
+                },
+              },
+            },
+          },
+        },
       });
 
       if (!pedidoData) {
-        throw new AppError('Pedido não encontrado', 404);
+        throw new AppError("Pedido não encontrado", 404);
       }
 
       const clientData = await prismaClient.cliente.findFirst({
-        where: { cnpj: pedidoData.cnpj_cli }
+        where: { cnpj: pedidoData.cnpj_cli },
       });
 
       if (!clientData) {
-        throw new AppError('Cliente não encontrado', 404);
+        throw new AppError("Cliente não encontrado", 404);
       }
 
       const repData = await prismaClient.representante.findFirst({
-        where: { cnpj: pedidoData.cnpj_rep }
+        where: { cnpj: pedidoData.cnpj_rep },
       });
 
       if (!repData) {
-        throw new AppError('Representante não encontrado', 404);
+        throw new AppError("Representante não encontrado", 404);
       }
 
       // Formatação do valor total para "R$50.000,00"
-      const formattedValorTotal = pedidoData.valor_total.toLocaleString('pt-BR', {
-        style: 'currency',
-        currency: 'BRL'
-      });
+      const formattedValorTotal = pedidoData.valor_total.toLocaleString(
+        "pt-BR",
+        {
+          style: "currency",
+          currency: "BRL",
+        }
+      );
 
       // Construção dos detalhes do pedido
-      const pedidoDetalhes = pedidoData.pedidoProduto.map((item) => `
+      const pedidoDetalhes = pedidoData.pedidoProduto
+        .map(
+          (item) => `
         Produto: ${item.produto.descricao}
         Quantidade: ${item.quantidade}
-        Preço Unitário: R$${item.produto.preco.toLocaleString('pt-BR')}
-        `).join('\n');
+        Preço Unitário: R$${item.produto.preco.toLocaleString("pt-BR")}
+        `
+        )
+        .join("\n");
 
       const subject = `Pedido realizado por ${clientData.razao_social}`;
       const text = `Olá ${repData.razao_social},
@@ -80,12 +87,18 @@ class SendOrderService {
       Equipe Repnet`;
 
       // Enviar o e-mail
-      await MailSender.sendMail([repData.email, clientData.email], subject, text);
-      console.log('Email enviado com sucesso');
-
+      await MailSender.sendMail(
+        [repData.email, clientData.email],
+        subject,
+        text
+      );
+      console.log("Email enviado com sucesso");
+    
+      return;
+    
     } catch (error) {
-      console.error('Erro ao enviar email:', error);
-      throw new AppError('Erro ao enviar email', 500);
+      console.error("Erro ao enviar email:", error);
+      throw new AppError("Erro ao enviar email", 500);
     }
   }
 }

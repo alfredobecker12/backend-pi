@@ -15,9 +15,8 @@ class AuthUserController {
       });
       console.log(authResponse);
       return res.json(authResponse);
-    
     } catch (error) {
-      next(error); 
+      next(error);
     }
   }
 }

@@ -14,20 +14,27 @@ interface UserRequest {
 }
 
 class CreateUserService {
-
-  async execute({ categoria, razao_social, cnpj, email, password, receita_bruta }: UserRequest) {
+  async execute({
+    categoria,
+    razao_social,
+    cnpj,
+    email,
+    password,
+    receita_bruta,
+  }: UserRequest) {
     try {
-      
       if (!categoria || !razao_social || !cnpj || !email || !password) {
         throw new AppError("Preencha os campos obrigatórios", 400);
       }
 
       const passwordHash = await hash(password, 8);
 
-      if (categoria === 'C') {
-        
+      if (categoria === "C") {
         if (!receita_bruta || receita_bruta < 0) {
-          throw new AppError("Preencha o campo de receita bruta com um valor válido", 400);
+          throw new AppError(
+            "Preencha o campo de receita bruta com um valor válido",
+            400
+          );
         }
 
         const cnpjAlreadyExists = await prismaClient.cliente.findFirst({
@@ -41,7 +48,7 @@ class CreateUserService {
         }
 
         let clientSize: CatCliente;
-        
+
         if (receita_bruta < 10000) {
           clientSize = CatCliente.P;
         } else if (receita_bruta >= 10000 && receita_bruta < 50000) {
@@ -78,8 +85,8 @@ class CreateUserService {
         });
 
         return user;
-
-      } else { // Representante
+      } else {
+        // Representante
         const cnpjAlreadyExists = await prismaClient.representante.findFirst({
           where: {
             cnpj: cnpj,
@@ -117,12 +124,9 @@ class CreateUserService {
 
         return user;
       }
-    
     } catch (error) {
-      
       if (error instanceof AppError) {
         throw error;
-      
       } else {
         throw new AppError("Erro interno do servidor", 500);
       }

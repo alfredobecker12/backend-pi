@@ -11,7 +11,6 @@ function errorHandler(err: any, req: Request, res: Response, next: NextFunction)
   
   } else {
     res.status(500).json({
-      statuscode: 500,
       errormessage: 'Internal Server Error'
     });
   }

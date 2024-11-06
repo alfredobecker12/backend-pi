@@ -12,7 +12,7 @@ import { ListOrderController } from "./controllers/order/ListOrderController";
 import { UpdateUserController } from "./controllers/user/UpdateUserController";
 import { ListCategoryController } from "./controllers/product/details/ListCategorysController";
 import { ListBrandController } from "./controllers/product/details/ListBrandController";
-import { SendOrderController } from "./controllers/mail/SendOrderController";
+import { SendOrderController } from "./controllers/order/SendOrderController";
 import { LoginUserController } from "./controllers/user/LoginUserController";
 
 const router = Router();
@@ -24,12 +24,12 @@ router.post("/autenticar", new AuthUserController().handle); // Verifica o códi
 router.get("/me", isAuthenticated, new DetailUserController().handle);
 router.post("/cadastro-produto", new CreateProductController().handle);
 router.post("/cadastro-categoria", new NewCategoryController().handle);
-router.post("/produtos", new ListProductController().handle);
+router.get("/produtos", new ListProductController().handle);
 router.post("/cadastro-marca", new BrandRegisterController().handle);
 router.post("/cadastro-pedido", new NewOrderController().handle);
 router.get("/pedidos", new ListOrderController().handle);
 router.patch("/perfil/atualizar", new UpdateUserController().handle);
-router.get("/categorias", new ListCategoryController().handle); 
+router.get("/categorias", new ListCategoryController().handle);
 router.get("/marcas", new ListBrandController().handle);
 router.post("/enviar-pedido", new SendOrderController().handle);
 

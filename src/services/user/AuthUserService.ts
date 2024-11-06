@@ -17,12 +17,10 @@ class AuthUserService {
       userInfo = await prismaClient.cliente.findFirst({
         where: { cnpj },
       });
-    
     } else if (categoria == "R") {
       userInfo = await prismaClient.representante.findFirst({
         where: { cnpj },
       });
-    
     } else {
       throw new AppError("Categoria inválida", 400);
     }
@@ -47,7 +45,7 @@ class AuthUserService {
           id: authCode.id,
         },
       });
-      
+
       throw new AppError("Código incorreto", 400);
     }
 
@@ -70,6 +68,7 @@ class AuthUserService {
     );
 
     return {
+      razao_social: userInfo.razao_social,
       cnpj: userInfo.cnpj,
       categoria: categoria,
       email: userInfo.email,

@@ -77,4 +77,4 @@ class ListProductService {
   }
 }
 
-export { ListProductService };
+export { ListProductService };
