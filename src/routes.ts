@@ -14,7 +14,7 @@ import { ListCategoryController } from "./controllers/product/details/ListCatego
 import { ListBrandController } from "./controllers/product/details/ListBrandController";
 import { SendOrderController } from "./controllers/order/SendOrderController";
 import { LoginUserController } from "./controllers/user/LoginUserController";
-
+import { DetailOrderController } from "./controllers/order/DetailOrderController";
 const router = Router();
 
 //-- ROTAS USER --
@@ -32,5 +32,6 @@ router.patch("/perfil/atualizar", new UpdateUserController().handle);
 router.get("/categorias", new ListCategoryController().handle);
 router.get("/marcas", new ListBrandController().handle);
 router.post("/enviar-pedido", new SendOrderController().handle);
+router.get("/resumo-pedidos", new DetailOrderController().handle);
 
 export { router };

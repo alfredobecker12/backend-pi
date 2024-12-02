@@ -1,5 +1,5 @@
-import { AppError } from "../../Errors/appError";
 import prismaClient from "../../prisma";
+import { AppError } from "../../Errors/appError";
 import { StatusPedido } from "@prisma/client";
 
 interface ItemPedido {

@@ -1,6 +1,6 @@
 import prismaClient from "../../prisma";
-import { AppError } from "../../Errors/appError";
 import MailSender from "../mail/MailSender";
+import { AppError } from "../../Errors/appError";
 
 interface PedidoRequest {
   id_pedido: number;

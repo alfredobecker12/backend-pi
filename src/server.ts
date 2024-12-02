@@ -6,12 +6,28 @@ import { errorHandler } from "./middlewares/ErrorHandles";
 
 const app = express();
 
-app.use(express.json());
-app.use(cors());
-app.use(router);
+const allowedOrigins = ['https://repnet.tec.br', 'https://frontend-repnet.vercel.app', 'http://localhost:3000'];
 
+app.use(express.json());
+const corsOptions: cors.CorsOptions = {
+  origin: (origin, callback) => {
+    // Verifica se a origem está na lista de origens permitidas
+    if (!origin || allowedOrigins.includes(origin)) {
+      callback(null, true);
+    } else {
+      callback(new Error('Not allowed by CORS'));
+    }
+  },
+  methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
+  allowedHeaders: ['Content-Type', 'Authorization', 'X-Requested-With'],
+  credentials: true, // Permitir credenciais
+};
+
+app.use(cors(corsOptions));
+app.use(router);
 app.use(errorHandler);
 
+// Middleware para lidar com erros
 app.use((err: Error, req: Request, res: Response, next: NextFunction) => {
   return res.status(500).json({
     status: "error",
@@ -19,4 +35,4 @@ app.use((err: Error, req: Request, res: Response, next: NextFunction) => {
   });
 });
 
-app.listen(3333, () => console.log("servidor online!!"));
+app.listen(3333, '0.0.0.0', () => console.log("Servidor online!!"));
