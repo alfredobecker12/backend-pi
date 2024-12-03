@@ -27,11 +27,11 @@ router.post("/cadastro-categoria", new NewCategoryController().handle);
 router.get("/produtos", new ListProductController().handle);
 router.post("/cadastro-marca", new BrandRegisterController().handle);
 router.post("/cadastro-pedido", new NewOrderController().handle);
-router.get("/pedidos", new ListOrderController().handle);
+router.post("/pedidos", new ListOrderController().handle);
 router.patch("/perfil/atualizar", new UpdateUserController().handle);
 router.get("/categorias", new ListCategoryController().handle);
 router.get("/marcas", new ListBrandController().handle);
 router.post("/enviar-pedido", new SendOrderController().handle);
-router.get("/resumo-pedidos", new DetailOrderController().handle);
+router.post("/resumo-pedidos", new DetailOrderController().handle);
 
 export { router };

@@ -1,5 +1,6 @@
 import prismaClient from "../../prisma";
 import MailSender from "../mail/MailSender";
+import { Cliente, Representante } from "@prisma/client";
 import { AppError } from "../../Errors/appError";
 import { generatePDF } from "../pdf/OrderReportPdf";
 
@@ -11,7 +12,7 @@ interface request {
 
 const pdfPath = "../pdf/OrderReportPdf/relatorio-pedidos.pdf";
 class OrderReport {
-  userData;
+  userData: any;
 
   async execute({ cnpj, categoria, opcao }: request) {
     if (!cnpj || !categoria || !opcao) {
@@ -49,15 +50,15 @@ class OrderReport {
           representante: true,
         },
       });
-
+    
       if (categoria == "C") {
-        const userData = await prismaClient.cliente.findFirst({
+        this.userData = await prismaClient.cliente.findFirst({
           where: {
             cnpj: cnpj,
           },
         });
       } else {
-        const userData = await prismaClient.representante.findFirst({
+        this.userData = await prismaClient.representante.findFirst({
           where: {
             cnpj: cnpj,
           },
@@ -72,8 +73,13 @@ class OrderReport {
 
       if (opcao == "D") {
       } else {
+        const subject = "Relatório de vendas";
+        const text = `Segue abaixo o relatório de vendas da ${this.userData.razao_social}`;
+
         try {
-          await MailSender.sendMail(user, subject, text);
+          await MailSender.sendMail(this.userData.email, subject, text, [
+            { filename: "relatorio.pdf", path: pdfPath },
+          ]);
         } catch (error) {
           throw new AppError(`Erro ao enviar o relatório:${error}`, 500);
         }
