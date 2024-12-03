@@ -22,7 +22,7 @@ class MailSender {
     });
   }
 
-  async sendMail(to: string | string[], subject: string, text: string) {
+  async sendMail(to: string | string[], subject: string, text: string, attachments?: { filename: string; path: string }[]) {
     const mailOptions = {
       from: {
         name: "Repnet",
@@ -31,6 +31,7 @@ class MailSender {
       to,
       subject,
       text,
+      attachments, // Adiciona os anexos aqui
     };
 
     try {
