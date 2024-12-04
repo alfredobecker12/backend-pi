@@ -52,6 +52,9 @@ class ListOrderService {
               },
             },
           },
+          orderBy: {
+            data_pedido: "desc",
+          },
         });
       } else {
         // Recuperar pedidos associados ao representante
@@ -81,6 +84,9 @@ class ListOrderService {
               },
             },
           },
+          orderBy: {
+            data_pedido: "desc",
+          },
         });
       }
 
@@ -89,9 +95,9 @@ class ListOrderService {
         throw new AppError(`Nenhum pedido encontrado para o CNPJ ${cnpj}`, 404);
       }
 
-      // Construir a estrutura de retorno
-      const pedidosInfo: PedidoInfo[] = pedidos.map((pedido) => ({
-        id: pedido.id,
+      // Construir a estrutura de retorno com IDs de 1 a n
+      const pedidosInfo: PedidoInfo[] = pedidos.map((pedido, index) => ({
+        id: index + 1, // ID começando de 1 até n
         status: pedido.status,
         valor_total: pedido.valor_total,
         cliente: pedido.cliente?.razao_social || "",
@@ -105,14 +111,7 @@ class ListOrderService {
 
       return pedidosInfo;
     } catch (error) {
-      if (error instanceof AppError) {
-        throw error;
-      } else {
-        throw new AppError(
-          `Não foi possível buscar os pedidos do CNPJ ${cnpj}: ${error.message}`,
-          500
-        );
-      }
+        throw new AppError(`Não foi possível buscar os pedidos do CNPJ ${cnpj}: ${error.message}`,500);
     }
   }
 }

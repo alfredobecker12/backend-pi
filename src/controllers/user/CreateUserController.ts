@@ -3,7 +3,8 @@ import { CreateUserService } from "../../services/user/CreateUserService";
 
 class CreateUserController {
   async handle(req: Request, res: Response, next: NextFunction) {
-    const { categoria, cnpj, password, razao_social, email, receita_bruta } = req.body;
+    const { categoria, cnpj, password, razao_social, email, receita_bruta } =
+      req.body;
 
     const createUserService = new CreateUserService();
 
@@ -17,10 +18,9 @@ class CreateUserController {
         receita_bruta,
       });
 
-      return res.status(201).json(user); // Adicionei o status 201 para criação bem-sucedida
-    
+      return res.status(201).json(user);
     } catch (error) {
-      next(error); // Passa o erro para o middleware de tratamento de erros
+      next(error);
     }
   }
 }

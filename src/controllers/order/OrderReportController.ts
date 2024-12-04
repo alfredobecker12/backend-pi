@@ -16,11 +16,13 @@ class OrderReportController {
 
       if (newReport.pdfBuffer) {
         // Se newReport contém pdfBuffer, envia o PDF na resposta
-        res.setHeader('Content-Type', 'application/pdf');
-        res.setHeader('Content-Disposition', 'attachment; filename=relatorio-pedidos.pdf');
+        res.setHeader("Content-Type", "application/pdf");
+        res.setHeader(
+          "Content-Disposition",
+          "attachment; filename=relatorio-pedidos.pdf"
+        );
         return res.send(newReport.pdfBuffer);
       } else {
-        // Se newReport contém uma mensagem, retorna a mensagem como JSON
         return res.json(newReport);
       }
     } catch (error) {

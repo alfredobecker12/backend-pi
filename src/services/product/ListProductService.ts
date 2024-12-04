@@ -68,11 +68,7 @@ class ListProductService {
         }));
       }
     } catch (error) {
-      if (error instanceof AppError) {
-        throw error;
-      } else {
-        throw new AppError("Erro ao buscar produtos: ${error}", 500);
-      }
+        throw new AppError(`Erro ao buscar produtos: ${error}`, 500);
     }
   }
 }

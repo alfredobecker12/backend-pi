@@ -10,7 +10,7 @@ class SendOrderController {
     try {
       await sendOrderService.execute({ id_pedido });
 
-      return res.status(200).json({ message: "Email enviado com sucesso" });
+      return res.json({ message: "Email enviado com sucesso" });
     } catch (error) {
       next(error);
     }

@@ -11,7 +11,6 @@ interface UserData {
 
 class LoginUserService {
   async execute({ cnpj, password }: UserData) {
-    // Validação básica
     if (!cnpj || !password) {
       throw new AppError("CNPJ e senha são obrigatórios", 400);
     }
@@ -61,7 +60,6 @@ class LoginUserService {
     const subject = "Código de autenticação";
     const text = `O seu código de autenticação é ${authCode}. Você tem 2 minutos para usá-lo.`;
 
-    // Tenta encontrar o cliente pelo CNPJ
     const cliente = await prismaClient.cliente.findFirst({ where: { cnpj } });
 
     if (cliente) {
@@ -78,7 +76,6 @@ class LoginUserService {
         throw new AppError("Usuário ou senha incorreto", 401);
       }
 
-      // Criar e enviar código para o cliente
       await createAndSendAuthCode(cliente.email, authCode, subject, text);
 
       return {
@@ -89,7 +86,6 @@ class LoginUserService {
       };
     }
 
-    // Se não encontrou como cliente, tenta como representante
     const representante = await prismaClient.representante.findFirst({
       where: { cnpj },
     });
@@ -110,8 +106,7 @@ class LoginUserService {
     if (!passwordMatchRepresentante) {
       throw new AppError("Usuário ou senha incorreto", 400);
     }
-
-    // Criar e enviar código para o representante
+    
     await createAndSendAuthCode(representante.email, authCode, subject, text);
 
     return {

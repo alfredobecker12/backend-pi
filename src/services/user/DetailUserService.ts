@@ -11,7 +11,6 @@ class DetailUserService {
       });
 
       if (clientTable) {
-        // SE FOR CLIENTE
         return {
           cnpj: cnpj,
           categoria: "C",
@@ -27,7 +26,6 @@ class DetailUserService {
       });
 
       if (representateTable) {
-        // SE FOR REPRESENTANTE
         return {
           cnpj: cnpj,
           categoria: "R",
@@ -36,8 +34,8 @@ class DetailUserService {
         };
       }
 
-      // Caso o CNPJ não seja encontrado em nenhuma das tabelas
       throw new AppError("CNPJ não encontrado", 404);
+    
     } catch (error) {
       if (error instanceof AppError) {
         throw error;

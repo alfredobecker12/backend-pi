@@ -12,7 +12,7 @@ class NewCategoryController {
         descricao,
       });
 
-      return res.json(newCategory);
+      return res.status(201).json(newCategory);
     } catch (error) {
       next(error);
     }

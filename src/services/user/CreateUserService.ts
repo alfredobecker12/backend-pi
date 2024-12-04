@@ -85,8 +85,8 @@ class CreateUserService {
         });
 
         return user;
+      
       } else {
-        // Representante
         const cnpjAlreadyExists = await prismaClient.representante.findFirst({
           where: {
             cnpj: cnpj,

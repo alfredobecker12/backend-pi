@@ -89,12 +89,9 @@ class CreateProductService {
       });
 
       return newProduct;
+    
     } catch (error) {
-      if (error instanceof AppError) {
-        throw error;
-      } else {
-        throw new AppError(`Erro ao criar produto: ${error.message}`, 500);
-      }
+        throw new AppError(`Erro ao criar produto: ${error}`, 500);
     }
   }
 }

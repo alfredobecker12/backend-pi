@@ -1,6 +1,6 @@
 import { Request, Response, NextFunction } from "express";
 import { DetailOrderService } from "../../services/order/DetailOrderService";
-console.log("Entrei no controller");
+
 class DetailOrderController {
   async handle(req: Request, res: Response, next: NextFunction) {
     const { cnpj, categoria } = req.body;

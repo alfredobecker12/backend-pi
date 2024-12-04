@@ -31,7 +31,7 @@ class MailSender {
       to,
       subject,
       text,
-      attachments, // Adiciona os anexos aqui
+      attachments, // Anexos
     };
 
     try {
