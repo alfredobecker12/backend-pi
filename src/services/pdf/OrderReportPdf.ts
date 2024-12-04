@@ -7,11 +7,17 @@ async function generatePDF(pedidos: (Pedido & {
   pedidoProduto: (PedidoProduto & { produto: { descricao: string, preco: number, marca: { razao_social: string } } })[], 
   cliente: { razao_social: string }, 
   representante: { razao_social: string } 
-})[], filePath: string) {
-  try{
+})[], filePath?: string): Promise<Buffer> {
+  try {
     const doc = new PDFDocument();
-    const writeStream = fs.createWriteStream(filePath);
-    doc.pipe(writeStream);
+    const buffers: Buffer[] = [];
+    doc.on('data', buffers.push.bind(buffers));
+    doc.on('end', () => {
+      const pdfBuffer = Buffer.concat(buffers);
+      if (filePath) {
+        fs.writeFileSync(filePath, pdfBuffer);
+      }
+    });
 
     // Cabeçalho
     doc.fontSize(25).text('Relatório de Vendas', { align: 'center' });
@@ -42,9 +48,12 @@ async function generatePDF(pedidos: (Pedido & {
     });
 
     doc.end();
-  
-  } catch(error){
-    throw new AppError(`Erro ao gerar o pdf:${error}`, 501);
+    return new Promise<Buffer>((resolve, reject) => {
+      doc.on('end', () => resolve(Buffer.concat(buffers)));
+      doc.on('error', reject);
+    });
+  } catch (error) {
+    throw new AppError(`Erro ao gerar o PDF: ${error}`, 501);
   }
 }
 

@@ -22,7 +22,7 @@ class MailSender {
     });
   }
 
-  async sendMail(to: string | string[], subject: string, text: string, attachments?: { filename: string; path: string }[]) {
+  async sendMail(to: string | string[], subject: string, text: string, attachments?: { filename: string; content: Buffer }[]) {
     const mailOptions = {
       from: {
         name: "Repnet",

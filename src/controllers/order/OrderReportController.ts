@@ -1,6 +1,5 @@
 import { Request, Response, NextFunction } from "express";
 import { OrderReportService } from "../../services/order/OrderReportService";
-import path from "path";
 
 class OrderReportController {
   async handle(req: Request, res: Response, next: NextFunction) {
@@ -15,11 +14,13 @@ class OrderReportController {
         opcao,
       });
 
-      if (typeof newReport === "string") {
-        const pdfPath = path.resolve(__dirname, newReport);
-        return res.sendFile(pdfPath);
-      
+      if (newReport.pdfBuffer) {
+        // Se newReport contém pdfBuffer, envia o PDF na resposta
+        res.setHeader('Content-Type', 'application/pdf');
+        res.setHeader('Content-Disposition', 'attachment; filename=relatorio-pedidos.pdf');
+        return res.send(newReport.pdfBuffer);
       } else {
+        // Se newReport contém uma mensagem, retorna a mensagem como JSON
         return res.json(newReport);
       }
     } catch (error) {

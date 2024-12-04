@@ -9,12 +9,10 @@ interface request {
   opcao: string;
 }
 
-const pdfPath = "C:/Users/Alfredo/Desktop/testeaaa/backend-repnet/src/services/pdf/OrderReportPdf/relatorio-pedidos.pdf";
-
 class OrderReportService {
   userData: any;
 
-  async execute({ cnpj, categoria, opcao }: request) {
+  async execute({ cnpj, categoria, opcao }: request): Promise<any> {
     if (!cnpj || !categoria || !opcao) {
       throw new AppError(
         `Todos os campos devem ser preenchidos\ncnpj:${cnpj}\ncategoria:${categoria}\nopção:${opcao}.`,
@@ -67,29 +65,24 @@ class OrderReportService {
         });
       }
 
-      try {
-        await generatePDF(pedidos, pdfPath);
-      } catch (error) {
-        throw new AppError(`Erro ao gerar pdf: ${error}`, 500);
-      }
+      const pdfBuffer = await generatePDF(pedidos);
 
       if (opcao === "D") {
-        return pdfPath;
+        // Retorna o buffer do PDF
+        return { pdfBuffer };
       } else {
         const subject = "Relatório de vendas";
         const text = `Segue abaixo o relatório de vendas da ${this.userData.razao_social}`;
 
         try {
           await MailSender.sendMail(this.userData.email, subject, text, [
-            { filename: "relatorio.pdf", path: pdfPath },
+            { filename: "relatorio.pdf", content: pdfBuffer },
           ]);
+          // Retorna uma mensagem de sucesso
+          return { message: "Relatório enviado para o email com sucesso." };
         } catch (error) {
           throw new AppError(`Erro ao enviar o relatório: ${error}`, 500);
         }
-
-        return {
-          message: "Relatório enviado para o email com sucesso.",
-        };
       }
     } catch (error) {
       throw new AppError(`Erro ao buscar pedidos: ${error.message}`, 500);
