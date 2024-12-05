@@ -97,7 +97,7 @@ class ListOrderService {
 
       // Construir a estrutura de retorno com IDs de 1 a n
       const pedidosInfo: PedidoInfo[] = pedidos.map((pedido, index) => ({
-        id: index + 1, 
+        id: pedidos.length - (index + 1), 
         status: pedido.status,
         valor_total: pedido.valor_total,
         cliente: pedido.cliente?.razao_social || "",
