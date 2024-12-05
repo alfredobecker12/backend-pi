@@ -16,42 +16,52 @@ class LoginUserService {
     }
 
     // Função para criação e envio do código de autenticação
-    const createAndSendAuthCode = async (email: string, authCode: number, subject: string, text: string) => {
+    const createAndSendAuthCode = async (
+      email: string,
+      authCode: number,
+      subject: string,
+      text: string
+    ) => {
       let authCodeRegistered: AutenticacaoLogin;
-      
-      try {
-          authCodeRegistered = await prismaClient.autenticacaoLogin.findFirst({
-          where: {
-            email: email
-          }
-        });
 
+      try {
+        authCodeRegistered = await prismaClient.autenticacaoLogin.findFirst({
+          where: {
+            email: email,
+          },
+        });
       } catch (error) {
-        throw new AppError(`Erro ao consultar existência do código: ${error}`, 500);
+        throw new AppError(
+          `Erro ao consultar existência do código: ${error}`,
+          500
+        );
       }
-      
-      if(authCodeRegistered) {
-          
+
+      if (authCodeRegistered) {
         try {
           await prismaClient.autenticacaoLogin.delete({
             where: {
-              id: authCodeRegistered.id
-            }
+              id: authCodeRegistered.id,
+            },
           });
-        
         } catch (error) {
-          throw new AppError(`Erro ao excluir registro de código exixtente: ${error}`, 500);
+          throw new AppError(
+            `Erro ao excluir registro de código exixtente: ${error}`,
+            500
+          );
         }
       }
-      
+
       try {
         await prismaClient.autenticacaoLogin.create({
-          data: { email, codigo: authCode }
+          data: { email, codigo: authCode },
         });
         await MailSender.sendMail(email, subject, text);
-      
       } catch (error) {
-        throw new AppError(`Erro ao criar código de autenticação ou enviar email: ${error.message}`, 500);
+        throw new AppError(
+          `Erro ao criar código de autenticação ou enviar email: ${error.message}`,
+          500
+        );
       }
     };
 
@@ -102,11 +112,14 @@ class LoginUserService {
       throw new AppError("Usuário ou senha incorreto", 401);
     }
 
-    const passwordMatchRepresentante = await compare(password, passwordRepresentante.password);
+    const passwordMatchRepresentante = await compare(
+      password,
+      passwordRepresentante.password
+    );
     if (!passwordMatchRepresentante) {
       throw new AppError("Usuário ou senha incorreto", 400);
     }
-    
+
     await createAndSendAuthCode(representante.email, authCode, subject, text);
 
     return {

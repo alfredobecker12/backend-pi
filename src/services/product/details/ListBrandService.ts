@@ -12,11 +12,7 @@ class ListBrandService {
         return brands;
       }
     } catch (error) {
-      if (error instanceof AppError) {
-        throw error;
-      } else {
-        throw new AppError(`Erro ao buscar as marcas: ${error}`, 500);
-      }
+      throw new AppError(`Erro ao buscar as marcas: ${error}`, 500);
     }
   }
 }

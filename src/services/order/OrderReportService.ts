@@ -65,11 +65,12 @@ class OrderReportService {
         });
       }
 
-      const pdfBuffer = await generatePDF(pedidos);
+      const pdfBuffer = await generatePDF(pedidos, categoria);
 
       if (opcao === "D") {
         // Retorna o buffer do PDF
         return { pdfBuffer };
+      
       } else {
         const subject = "Relatório de vendas";
         const text = `Segue abaixo o relatório de vendas da ${this.userData.razao_social}`;
@@ -85,7 +86,7 @@ class OrderReportService {
         }
       }
     } catch (error) {
-      throw new AppError(`Erro ao buscar pedidos: ${error.message}`, 500);
+      throw new AppError(`Erro ao buscar pedidos: ${error}`, 500);
     }
   }
 }

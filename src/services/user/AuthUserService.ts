@@ -40,20 +40,16 @@ class AuthUserService {
     }
 
     if (authCode.codigo !== code) {
+      throw new AppError("Código incorreto", 400);
+    }
+
+    if(authCode.codigo == code){
       await prismaClient.autenticacaoLogin.delete({
         where: {
           id: authCode.id,
         },
       });
-
-      throw new AppError("Código incorreto", 400);
     }
-
-    await prismaClient.autenticacaoLogin.delete({
-      where: {
-        id: authCode.id,
-      },
-    });
 
     const token = sign(
       {

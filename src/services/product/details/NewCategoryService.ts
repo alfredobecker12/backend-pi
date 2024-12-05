@@ -20,11 +20,7 @@ class NewCategoryService {
 
       return newProductCategory;
     } catch (error) {
-      if (error instanceof AppError) {
-        throw error;
-      } else {
-        throw new AppError(`Não foi possível criar a categoria: ${error}`, 500);
-      }
+      throw new AppError(`Não foi possível criar a categoria: ${error}`, 500);
     }
   }
 }

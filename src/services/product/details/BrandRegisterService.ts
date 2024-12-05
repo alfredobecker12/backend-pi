@@ -98,7 +98,7 @@ class BrandRegisterService {
       }
 
       // Cria a associação entre representante e marca com a próxima categoria
-      const newMarcaRep = await prismaClient.representanteMarca.create({
+      await prismaClient.representanteMarca.create({
         data: {
           cnpjMarca: cnpj_marca,
           cnpjRepresentante: cnpj_rep,
@@ -108,11 +108,7 @@ class BrandRegisterService {
 
       return marcaVerify;
     } catch (error) {
-      if (error instanceof AppError) {
-        throw error;
-      } else {
-        throw new AppError(`Erro ao registrar marca: ${error.message}`, 500);
-      }
+      throw new AppError(`Erro ao registrar marca: ${error}`, 500);
     }
   }
 }

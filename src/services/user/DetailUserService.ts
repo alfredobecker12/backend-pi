@@ -35,13 +35,8 @@ class DetailUserService {
       }
 
       throw new AppError("CNPJ não encontrado", 404);
-    
     } catch (error) {
-      if (error instanceof AppError) {
-        throw error;
-      } else {
-        throw new AppError("Erro interno do servidor", 500);
-      }
+      throw new AppError("Erro interno do servidor", 500);
     }
   }
 }

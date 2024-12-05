@@ -97,7 +97,7 @@ class ListOrderService {
 
       // Construir a estrutura de retorno com IDs de 1 a n
       const pedidosInfo: PedidoInfo[] = pedidos.map((pedido, index) => ({
-        id: index + 1, // ID começando de 1 até n
+        id: index + 1, 
         status: pedido.status,
         valor_total: pedido.valor_total,
         cliente: pedido.cliente?.razao_social || "",
@@ -111,7 +111,10 @@ class ListOrderService {
 
       return pedidosInfo;
     } catch (error) {
-        throw new AppError(`Não foi possível buscar os pedidos do CNPJ ${cnpj}: ${error.message}`,500);
+      throw new AppError(
+        `Não foi possível buscar os pedidos do CNPJ ${cnpj}: ${error}`,
+        500
+      );
     }
   }
 }

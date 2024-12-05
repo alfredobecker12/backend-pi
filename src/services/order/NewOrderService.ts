@@ -96,7 +96,7 @@ class NewOrderService {
 
       return novoPedido.id;
     } catch (error) {
-        throw new AppError(`Não foi possível criar um pedido: ${error}`, 500);
+      throw new AppError(`Não foi possível criar um pedido: ${error}`, 500);
     }
   }
 }

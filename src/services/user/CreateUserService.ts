@@ -85,7 +85,6 @@ class CreateUserService {
         });
 
         return user;
-      
       } else {
         const cnpjAlreadyExists = await prismaClient.representante.findFirst({
           where: {
@@ -125,11 +124,7 @@ class CreateUserService {
         return user;
       }
     } catch (error) {
-      if (error instanceof AppError) {
-        throw error;
-      } else {
-        throw new AppError("Erro interno do servidor", 500);
-      }
+      throw new AppError("Erro interno do servidor", 500);
     }
   }
 }

@@ -9,7 +9,6 @@ class ListProductController {
 
     try {
       const produtos = await listProductService.execute({ categoria });
-      console.log(produtos);
       res.json(produtos);
     } catch (error) {
       next(error);

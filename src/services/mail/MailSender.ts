@@ -22,7 +22,12 @@ class MailSender {
     });
   }
 
-  async sendMail(to: string | string[], subject: string, text: string, attachments?: { filename: string; content: Buffer }[]) {
+  async sendMail(
+    to: string | string[],
+    subject: string,
+    text: string,
+    attachments?: { filename: string; content: Buffer }[]
+  ) {
     const mailOptions = {
       from: {
         name: "Repnet",
@@ -36,10 +41,8 @@ class MailSender {
 
     try {
       const info = await this.transporter.sendMail(mailOptions);
-      console.log("Email enviado com sucesso: %s", info.messageId);
       return info;
     } catch (error) {
-      console.error("Erro ao enviar email: ", error);
       throw new Error("Erro ao enviar email");
     }
   }

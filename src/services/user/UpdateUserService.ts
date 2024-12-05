@@ -77,11 +77,7 @@ class UpdateUserService {
         email,
       };
     } catch (error) {
-      if (error instanceof AppError) {
-        throw error;
-      } else {
-        throw new AppError(`Erro ao atualizar usuário: ${error.message}`, 500);
-      }
+      throw new AppError(`Erro ao atualizar usuário: ${error}`, 500);
     }
   }
 }

@@ -89,9 +89,8 @@ class CreateProductService {
       });
 
       return newProduct;
-    
     } catch (error) {
-        throw new AppError(`Erro ao criar produto: ${error}`, 500);
+      throw new AppError(`Erro ao criar produto: ${error}`, 500);
     }
   }
 }

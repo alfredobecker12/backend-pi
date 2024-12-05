@@ -93,11 +93,9 @@ class SendOrderService {
         text
       );
       console.log("Email enviado com sucesso");
-    
+
       return;
-    
     } catch (error) {
-      console.error("Erro ao enviar email:", error);
       throw new AppError("Erro ao enviar email", 500);
     }
   }

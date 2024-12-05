@@ -9,7 +9,6 @@ class DetailOrderController {
 
     try {
       const detailOrder = await detailOrderService.execute({ cnpj, categoria });
-      console.log(detailOrder);
       return res.json(detailOrder);
     } catch (error) {
       next(error);

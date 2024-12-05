@@ -15,7 +15,6 @@ class OrderReportController {
       });
 
       if (newReport.pdfBuffer) {
-        // Se newReport contém pdfBuffer, envia o PDF na resposta
         res.setHeader("Content-Type", "application/pdf");
         res.setHeader(
           "Content-Disposition",

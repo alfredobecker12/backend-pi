@@ -15,11 +15,7 @@ class ListCategoryService {
         }));
       }
     } catch (error) {
-      if (error instanceof AppError) {
-        throw error;
-      } else {
-        throw new AppError(`Erro ao buscar as categorias: ${error}`, 500);
-      }
+      throw new AppError(`Erro ao buscar as categorias: ${error}`, 500);
     }
   }
 }

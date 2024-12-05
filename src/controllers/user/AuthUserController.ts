@@ -13,7 +13,6 @@ class AuthUserController {
         categoria,
         code,
       });
-      console.log(authResponse);
       return res.json(authResponse);
     } catch (error) {
       next(error);
