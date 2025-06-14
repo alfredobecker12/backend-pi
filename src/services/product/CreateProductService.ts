@@ -8,6 +8,7 @@ interface ProductRequest {
   preco: number;
   categoria: string;
   marca: string;
+  imagem?: Buffer;
 }
 
 class CreateProductService {
@@ -18,6 +19,7 @@ class CreateProductService {
     preco,
     categoria,
     marca,
+    imagem,
   }: ProductRequest) {
     try {
       if (!descricao || !preco || !categoria || !marca) {
@@ -49,22 +51,6 @@ class CreateProductService {
         throw new AppError("Marca não encontrada", 400);
       }
 
-      // Verificação se o produto já existe
-      const productAlreadyExists = await prismaClient.produto.findFirst({
-        where: {
-          descricao: descricao,
-          validade: validade, // Verifica validade apenas se estiver presente
-          peso: peso,
-          preco: preco,
-          id_cat: categoriaVerify.id,
-          cnpj_marca: marcaVerify.cnpj,
-        },
-      });
-
-      if (productAlreadyExists) {
-        throw new AppError("Produto já existe", 400);
-      }
-
       // Criação do novo produto
       const newProductData = {
         descricao: descricao,
@@ -73,6 +59,7 @@ class CreateProductService {
         preco: preco,
         id_cat: categoriaVerify.id,
         cnpj_marca: marcaVerify.cnpj,
+        imagem: imagem || null,
       };
 
       // Inclui validade se estiver presente

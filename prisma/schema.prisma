@@ -68,12 +68,13 @@ model Produto {
   validade         String?
   peso             Int?
   preco            Float
-  imagem           Bytes?
+  status           StatusUser       @default(ATIVO)
   id_cat           Int
   cnpj_marca       String
   pedidoProduto    PedidoProduto[]
   marca            Marca            @relation(fields: [cnpj_marca], references: [cnpj])
   categoriaProduto CategoriaProduto @relation(fields: [id_cat], references: [id])
+  imagem           Bytes?
 }
 
 model Pedido {
