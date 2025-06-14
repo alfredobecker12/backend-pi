@@ -68,6 +68,7 @@ model Produto {
   validade         String?
   peso             Int?
   preco            Float
+  imagem           Bytes?
   id_cat           Int
   cnpj_marca       String
   pedidoProduto    PedidoProduto[]
