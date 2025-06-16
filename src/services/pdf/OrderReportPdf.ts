@@ -97,7 +97,7 @@ async function generatePDF(
       checkPageBreak(heightNeeded);
 
       // Pedido Header
-      doc.fontSize(fontSizeSubtitle).text(`Pedido ${index + 1}`, margin, y);
+      doc.fontSize(fontSizeSubtitle).text(`Pedido ${pedido.id}`, margin, y);
       y += lineHeight;
 
       // Pedido Details in two-column format
