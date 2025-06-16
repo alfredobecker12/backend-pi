@@ -47,6 +47,9 @@ class ListProductService {
         }));
       } else {
         const produtos = await prismaClient.produto.findMany({
+          where: {
+            status: "ATIVO",
+          },
           include: {
             categoriaProduto: true,
             marca: true,
