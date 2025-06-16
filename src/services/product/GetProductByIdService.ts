@@ -22,15 +22,21 @@ class GetProductByIdService {
           );
         }
 
+        const marca = await prismaClient.marca.findUnique({
+          where: {
+            cnpj: produto.cnpj_marca,
+          },
+        });
+
         return ({
           id: produto.id,
           descricao: produto.descricao,
           validade: produto.validade,
           peso: produto.peso,
           preco: produto.preco,
-          imagem: produto.imagem,
           id_cat: produto.id_cat,
-          id_marca: produto.cnpj_marca,
+          id_marca: marca.razao_social,
+          imagem: produto.imagem,
         });
       }
     } catch (error) {
