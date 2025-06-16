@@ -83,8 +83,18 @@ async function generatePDF(
 
     // Process each pedido
     pedidos.forEach((pedido, index) => {
-      // Check if there's enough space for pedido details (approx. 7 lines)
-      checkPageBreak(7 * lineHeight);
+      // Calculate lines needed for this pedido
+      const linesForPedido =
+        1 + // Pedido header
+        6 + // Details
+        1 + // Products header
+        pedido.pedidoProduto.length + // Product rows
+        2; // Separator and space
+
+      const heightNeeded = linesForPedido * lineHeight;
+
+      // Check if there's enough space for the whole pedido block
+      checkPageBreak(heightNeeded);
 
       // Pedido Header
       doc.fontSize(fontSizeSubtitle).text(`Pedido ${index + 1}`, margin, y);
