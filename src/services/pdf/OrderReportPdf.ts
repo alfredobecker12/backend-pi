@@ -29,57 +29,98 @@ async function generatePDF(
       }
     });
 
-    const tituloRelatorio = categoria == "C" ? "Compras" : "Vendas";
-    // Formatação data
+    const tituloRelatorio = categoria === "C" ? "Compras" : "Vendas";
     const options: Intl.DateTimeFormatOptions = {
       day: "2-digit",
       month: "2-digit",
-      year: "2-digit",
+      year: "numeric",
     };
 
-    doc
-      .fontSize(25)
-      .text(`Relatório de ${tituloRelatorio}`, { align: "center" });
-    doc
-      .fontSize(12)
-      .text(`Data: ${new Date().toLocaleDateString("pt-BR", options)}`, {
-        align: "right",
-      });
-    doc.moveDown();
+    // Constants for layout
+    const margin = 50;
+    const labelX = margin;
+    const valueX = 250;
+    const descX = margin;
+    const quantX = 250;
+    const precoX = 350;
+    const marcaX = 450;
+    const lineHeight = 20;
+    const fontSizeTitle = 25;
+    const fontSizeSubtitle = 16;
+    const fontSizeNormal = 12;
+    const fontSizeSmall = 10;
+    let y = margin;
 
-    // Pedidos
+    // Header: Title and Date
+    doc.fontSize(fontSizeTitle).text(`Relatório de ${tituloRelatorio}`, margin, y, { align: "center" });
+    y += lineHeight * 2;
+    doc.fontSize(fontSizeNormal).text(`Data: ${new Date().toLocaleDateString("pt-BR", options)}`, margin, y, { align: "right" });
+    y += lineHeight * 2;
+
+    // Helper function to check for page breaks
+    function checkPageBreak(heightNeeded: number) {
+      if (y + heightNeeded > doc.page.height - margin) {
+        doc.addPage();
+        y = margin;
+      }
+    }
+
+    // Helper function to print label-value pairs
+    function printLabelValue(label: string, value: string) {
+      doc.fontSize(fontSizeNormal).text(label, labelX, y);
+      doc.text(value, valueX, y);
+      y += lineHeight;
+    }
+
+    // Helper function to print product rows
+    function printProdutoRow(descricao: string, quantidade: string, preco: string, marca: string) {
+      doc.fontSize(fontSizeSmall).text(descricao, descX, y, { width: 180 });
+      doc.text(quantidade, quantX, y);
+      doc.text(preco, precoX, y);
+      doc.text(marca, marcaX, y);
+      y += lineHeight;
+    }
+
+    // Process each pedido
     pedidos.forEach((pedido, index) => {
-      doc.fontSize(16).text(`Pedido ${index + 1}`, { bold: true });
-      doc
-        .fontSize(14)
-        .text(`Data do Pedido: ${pedido.data_pedido.toLocaleDateString()}`);
-      doc.fontSize(14).text(`CNPJ Cliente: ${pedido.cnpj_cli}`);
-      doc
-        .fontSize(14)
-        .text(`Razão Social Cliente: ${pedido.cliente.razao_social}`);
-      doc.fontSize(14).text(`CNPJ Representante: ${pedido.cnpj_rep}`);
-      doc
-        .fontSize(14)
-        .text(
-          `Razão Social Representante: ${pedido.representante.razao_social}`
-        );
-      doc.fontSize(14).text(`Valor Total: R$ ${pedido.valor_total.toFixed(2)}`);
-      doc.moveDown();
+      // Check if there's enough space for pedido details (approx. 7 lines)
+      checkPageBreak(7 * lineHeight);
 
-      pedido.pedidoProduto.forEach((item, idx) => {
-        doc
-          .fontSize(12)
-          .text(`  Produto ${idx + 1}: ${item.produto.descricao}`);
-        doc.fontSize(12).text(`  Quantidade: ${item.quantidade}`);
-        doc.fontSize(12).text(`  Preço: R$ ${item.produto.preco.toFixed(2)}`);
-        doc.fontSize(12).text(`  Marca: ${item.produto.marca.razao_social}`);
-        doc.moveDown();
+      // Pedido Header
+      doc.fontSize(fontSizeSubtitle).text(`Pedido ${index + 1}`, margin, y);
+      y += lineHeight;
+
+      // Pedido Details in two-column format
+      printLabelValue("Data do Pedido:", pedido.data_pedido.toLocaleDateString("pt-BR", options));
+      printLabelValue("CNPJ Cliente:", pedido.cnpj_cli);
+      printLabelValue("Razão Social Cliente:", pedido.cliente.razao_social);
+      printLabelValue("CNPJ Representante:", pedido.cnpj_rep);
+      printLabelValue("Razão Social Representante:", pedido.representante.razao_social);
+      printLabelValue("Valor Total:", `R$ ${pedido.valor_total.toFixed(2)}`);
+      y += lineHeight / 2;
+
+      // Products Header
+      doc.fontSize(fontSizeSmall)
+        .text("Descrição", descX, y)
+        .text("Quantidade", quantX, y)
+        .text("Preço", precoX, y)
+        .text("Marca", marcaX, y);
+      y += lineHeight;
+
+      // Product Rows
+      pedido.pedidoProduto.forEach((item) => {
+        printProdutoRow(
+          item.produto.descricao,
+          item.quantidade.toString(),
+          `R$ ${item.produto.preco.toFixed(2)}`,
+          item.produto.marca.razao_social
+        );
       });
 
-      doc
-        .moveDown()
-        .text("----------------------------------------", { align: "center" });
-      doc.moveDown();
+      // Separator
+      y += lineHeight;
+      doc.moveTo(margin, y).lineTo(doc.page.width - margin, y).stroke();
+      y += lineHeight;
     });
 
     doc.end();
