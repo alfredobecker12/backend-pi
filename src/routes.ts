@@ -19,6 +19,7 @@ import { DetailOrderController } from "./controllers/order/DetailOrderController
 import { OrderReportController } from "./controllers/order/OrderReportController";
 import { UpdateProductController } from "./controllers/product/UpdateProductController";
 import { DeleteProductController } from "./controllers/product/DeleteProductController";
+import { GetProductByIdController } from "./controllers/product/GetProductByIdController";
 
 const router = Router();
 const upload = multer();
@@ -33,6 +34,7 @@ router.patch("/atualizar-produto", upload.single("image"), new UpdateProductCont
 router.put("/deletar-produto", new DeleteProductController().handle);
 router.post("/cadastro-categoria", new NewCategoryController().handle);
 router.get("/produtos", new ListProductController().handle);
+router.get("/produtos/id", new GetProductByIdController().handle);
 router.post("/cadastro-marca", new BrandRegisterController().handle);
 router.post("/cadastro-pedido", new NewOrderController().handle);
 router.post("/pedidos", new ListOrderController().handle);

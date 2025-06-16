@@ -42,6 +42,7 @@ class ListProductService {
           validade: produto.validade,
           peso: produto.peso,
           preco: produto.preco,
+          imagem: produto.imagem,
           id_cat: produto.categoriaProduto.descricao,
           id_marca: produto.marca.razao_social,
         }));
@@ -66,6 +67,7 @@ class ListProductService {
           validade: produto.validade,
           peso: produto.peso,
           preco: produto.preco,
+          imagem: produto.imagem,
           id_cat: produto.categoriaProduto.descricao,
           id_marca: produto.marca.razao_social,
         }));
